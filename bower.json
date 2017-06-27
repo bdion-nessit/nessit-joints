@@ -1,0 +1,15 @@
+{
+  "name": "jointswp",
+  "private": true,
+  "ignore": [],
+  "dependencies": {
+<<<<<<< HEAD
+    "foundation-sites": ">=6.3"
+=======
+    "foundation-sites": ">=6.3.1"
+>>>>>>> 7cae108cee185746c2286e05cf82f13ee71a1dad
+  },
+  "devDependencies": {
+    "motion-ui": "^1.2.2"
+  }
+}
