@@ -38,3 +38,14 @@
     background-size: contain;
     background-position: center center;
 }
+.wpb-layout-element-button[data-element=vc_rotary_menu] .vc_element-icon {
+    background-image: url('../images/rotary-menu.png');
+    background-size: contain;
+    background-position: center center;
+}
+
+.vc_rotary_menu_icon.vc_element-icon {
+    background-image: url('../images/rotary-menu.png');
+    background-size: contain;
+    background-position: center center;
+}

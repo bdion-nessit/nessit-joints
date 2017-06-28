@@ -3,6 +3,7 @@
 //--------Create custom widgets--------
 
 add_action('vc_before_init', 'vc_linkable_column');
+add_action('vc_before_init', 'vc_rotary_menu_init');
 add_action('vc_before_init', 'vc_single_item_slider_init');
 add_action('vc_before_init', 'vc_custom_button_init');
 add_action('init', 'vc_custom_posts_widget_init', 35);
@@ -48,7 +49,6 @@ function vc_single_item_slider_init() {
     'name' => 'Single Item Slider Item',
     'base' => 'vc_single_item_slider_item',
     'icon' => 'vc_single_item_slider_item_icon',
-    'as_parent' => array('except' => ''),
     'as_child' => array(
       'only' => 'vc_single_item_slider',
       ),
@@ -132,6 +132,100 @@ function vc_linkable_column() {
     ));
   if ( class_exists( 'WPBakeryShortCodesContainer' ) ) {
     class WPBakeryShortCode_vc_Linkable_Column extends WPBakeryShortCodesContainer {
+
+    }
+  }
+}
+function vc_rotary_menu_init() {
+  vc_map(array(
+    'name' => 'Rotary Menu',
+    'base' => 'vc_rotary_menu',
+    'icon' => 'vc_rotary_menu_icon',
+    'as_parent' => array(
+      'only' => 'vc_rotary_menu_item',
+      ),
+    'content_element' => true,
+    'show_settings_on_create' => false,
+    'is_container' => true,
+    'admin_enqueue_css' => get_stylesheet_directory_uri() . '/assets/css/custom-editor-style.css',
+    'params' => array(
+      array(
+        'type' => 'textfield',
+        'heading' => 'Menu Title',
+        'param_name' => 'title',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'colorpicker',
+        'heading' => 'Title Color',
+        'param_name' => 'title_color',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'colorpicker',
+        'heading' => 'Rotary Hub BG',
+        'param_name' => 'rotary_bg',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'textfield',
+        'heading' => 'Element ID',
+        'param_name' => 'elem_id',
+        'description' => 'Enter element ID (Note: make sure it is unique and valid according to w3c specification).',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'textfield',
+        'heading' => 'Extra class name',
+        'param_name' => 'el_class',
+        'description' => 'Style particular content element differently - add a class name and refer to it in custom CSS.',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'css_editor',
+        'heading' => 'CSS Options',
+        'param_name' => 'css',
+        'group' => 'Design options',
+        ),
+      ),
+    "js_view" => 'VcColumnView',
+    ));
+  vc_map(array(
+    'name' => 'Rotary Menu Item',
+    'base' => 'vc_rotary_menu_item',
+    "as_child" => array('only' => 'vc_rotary_menu_slider'),
+    'content_element' => true,
+    'show_settings_on_create' => false,
+    'is_container' => true,
+    'params' => array(
+      array(
+        'type' => 'textfield',
+        'heading' => 'Element ID',
+        'param_name' => 'elem_id',
+        'description' => 'Enter element ID (Note: make sure it is unique and valid according to w3c specification).',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'textfield',
+        'heading' => 'Extra class name',
+        'param_name' => 'el_class',
+        'description' => 'Style particular content element differently - add a class name and refer to it in custom CSS.',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'css_editor',
+        'heading' => 'CSS Options',
+        'param_name' => 'css',
+        'group' => 'Design options',
+        ),
+      ),
+    "js_view" => 'VcColumnView',
+    ));
+  if ( class_exists( 'WPBakeryShortCodesContainer' ) ) {
+    class WPBakeryShortCode_vc_Rotary_Menu extends WPBakeryShortCodesContainer {
+
+    }
+    class WPBakeryShortCode_vc_Rotary_Menu_Item extends WPBakeryShortCodesContainer {
 
     }
   }
