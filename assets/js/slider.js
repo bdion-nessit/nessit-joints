@@ -7,6 +7,9 @@ jQuery(function($) {
 			var initialScroll = true;
 			var scrollPos = 0;
 			var curPage = 'app';
+			var canScroll = true;
+			var scrollDebounce;
+			var curScrollLeft = 0;
 			
 			//Positions the slides relative to the window size
 			function positionSlides(left) {
@@ -62,10 +65,22 @@ jQuery(function($) {
 					controls.find(".active").removeClass('active');
 					$(this).addClass('active');
 					var newSlide = $(j).find('.content-slide:eq(' + (parseInt($(this).data('slide')) - 1) + ')');
-					curSlide.css('opacity', 0);
-					newSlide.css('opacity', 1);
+					curSlide.css('opacity', 0).removeClass('active');
+					newSlide.css('opacity', 1).addClass('active');
+					curScrollLeft = newSlide.index() * k.width();
+					if(window.innerWidth <= 768) {
+						canScroll = false;
+						if(scrollDebounce) {
+							clearTimeout(scrollDebounce);
+						}
+						scrollDebounce = setTimeout(function() {
+							k.animate({scrollLeft : curScrollLeft}, 100, function() {
+								canScroll = true;
+							});
+						}, 50);
+					}
 					setTimeout(function() { userSlide = true; }, 500);
-
+					setTimeout(function() { midClick = false; }, 25);
 				}
 			});
 			$('.content-slide-prev').click(function() {
@@ -83,6 +98,38 @@ jQuery(function($) {
 				else {
 					controls.find('.content-slide-button').first().trigger('click');
 				}
+			});
+			jQuery('.content-slide-wrap > .vc_column-inner').scroll(function() { 
+				if(midClick || window.innerWidth >= 768 || !canScroll) {
+					console.log(canScroll);
+					return;
+				}
+				if($(this).scrollLeft() > curScrollLeft && $(this).find('.active').next().length) {
+					console.log('right');
+					var offsetMod = $(this).find('.active').next().offset().left % $(this).parent().width()
+					if($(this).find('.active').next().offset().left < $(this).parent().width() && offsetMod < ($(this).parent().width() / 2) && offsetMod !== 0) {
+						midClick = true;
+						$(this).parent().siblings('.content-slider-controls').find('.content-slide-next').trigger('click');
+					}
+				}
+				else {
+					console.log('left');
+					if($(this).scrollLeft() < curScrollLeft && $(this).find('.active').prev().length) {
+						var offsetMod = Math.abs($(this).find('.active').prev().offset().left) % $(this).parent().width()
+						if(Math.abs($(this).find('.active').prev().offset().left) < $(this).parent().width() && offsetMod < ($(this).parent().width() / 2) && offsetMod !== 0) {
+							midClick = true;
+							$(this).parent().siblings('.content-slider-controls').find('.content-slide-prev').trigger('click');
+						}
+					}
+				} 
+				if(scrollDebounce) {
+						clearTimeout(scrollDebounce);
+					}
+					scrollDebounce = setTimeout(function() {
+						k.animate({scrollLeft : curScrollLeft}, 100, function() {
+							canScroll = true;
+						});
+				}, 101);
 			});
 		});
 	});
