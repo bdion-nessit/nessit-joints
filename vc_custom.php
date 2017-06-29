@@ -739,6 +739,12 @@ function joints_custom_vc_button($atts) {
 
   //Initialize class variable
   $button_atts['class'] = '';
+  $class = (isset($atts['el_class']) ? $atts['el_class'] : "");
+  $classes_arr = array(//(isset($atts['button_size']) ? $atts['button_size'] . ' ' : "") ,
+                            //$atts['content_type'] . ' ' ,
+                            $class,
+                            $css_class,
+                            (!empty($atts['button_display']) ? ' full-width': ""));
 
   //Format button content base on content type set
   switch($atts['content_type']) {
@@ -771,13 +777,52 @@ function joints_custom_vc_button($atts) {
   $button_atts['hover_anim'] = (isset($atts['hover_anim']) ? $atts['hover_anim'] : "");
 
   //Pass along the hover animation color to button widget if set
-  $button_atts['hover_color'] = (isset($atts['hover_color']) ? $atts['hover_color'] : "");
+  if(isset($atts['hover_color']) && !empty($button_atts['hover_anim'])) {
+    if($atts['hover_color'] === 'custom') {
+      global $vc_custom_styles;
+      $vc_custom_styles = (!empty($vc_custom_styles) ? $vc_custom_styles : "");
+      $style_id = preg_replace("/\./", '', uniqid('', true));
+      while(strpos($vc_custom_styles, $style_id) !== false) {
+        $style_id = preg_replace("/\./", '', uniqid('', true));
+      }
+      $classes_arr[] = $style_id;
+      switch($button_atts['hover_anim']) {
+        case 'hover-fill-right':
+          $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . '.hover-fill-right:before {
+            background-color: ' . $atts['hover_bg_color'] . ' !important;
+          }' . PHP_EOL : '');
+          break;
+        case 'hover-fill-up':
+          $vc_custom_styles .= '.' . $style_id . ':hover.hover-fill-up {' . 
+            (isset($atts['hover_text_color']) ? 'color: ' . $atts['hover_text_color'] . ' !important;' : '') .
+            (isset($atts['hover_border_color']) ? 'border-color: ' . $atts['hover_border_color'] . ' !important;' : '') .
+            (isset($atts['hover_bg_color']) ? 'background-color: ' . $atts['hover_bg_color'] . ' !important;' : '') .
+          '}' . PHP_EOL;
+          break;
+        case 'hover-partial-fill-down':
+          $vc_custom_styles .= (isset($atts['hover_border_color']) ? '.' . $style_id . ':hover.hover-partial-fill-down:before {
+            border-width: 1px;
+            border-style: solid;
+            border-color: ' . $atts['hover_border_color'] . ';
+          }' . PHP_EOL : '');
+          break;
+        case 'hover-underline-slide-left-half':
+          $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . ':hover.hover-underline-slide-left-half a:before, 
+          .' . $style_id . ':hover.hover-underline-slide-left-half button:before  {
+            background-color: ' . $atts['hover_bg_color'] . ' !important;
+          }' . PHP_EOL : '');
+          break;
+      }
+      $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . 'hover:before {
+            background-color: ' . $atts['hover_bg_color'] . ' !important;
+          }' . PHP_EOL : '');
+    }
+    else {
+      $button_atts['hover_color'] = $atts['hover_color'];
+    }
+  }
   $class = (isset($atts['el_class']) ? $atts['el_class'] : "");
-  $button_atts['class'] = //(isset($atts['button_size']) ? $atts['button_size'] . ' ' : "") . 
-                            //$atts['content_type'] . ' ' . 
-                            $class . ' ' . 
-                            $css_class . 
-                            (!empty($atts['button_display']) ? ' full-width': "");
+  $button_atts['class'] = implode(' ', $classes_arr);
   $button_atts['style'] = '';
   $button_atts['style'] = (!empty($atts['color']) ? 'color: ' . $atts['color'] . ';' : "") . (!empty($atts['button_display']) ? ' display: ' . $atts['button_display'] . ';' : "");
   return '<div class="wpb_custom_button" style="' . (!empty($atts['button_display']) ? 'display: ' . $atts['button_display'] . ';' : "") . '">' . get_custom_button($button_atts) . '</div>';

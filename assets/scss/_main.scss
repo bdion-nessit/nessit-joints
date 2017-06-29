@@ -75,6 +75,9 @@ Joints Fixes
 .position-right {
 	transform: translateX(250px);
 }
+.search-field:focus {
+	box-shadow: none;
+}
 
 /*********************
 GENERAL STYLES
