@@ -266,6 +266,7 @@ function the_entry_content() {
 function get_primary_sidebar() {
 	if ( is_active_sidebar( 'sidebar1' ) ) {
 		dynamic_sidebar( 'sidebar1' );
-	}	
+	}
+}
 
 //-------End Sidebar
