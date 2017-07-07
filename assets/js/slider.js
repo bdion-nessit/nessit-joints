@@ -54,7 +54,7 @@ jQuery(function($) {
 				}
 			}
 			controls.find('.content-slide-prev').after(buttons);
-			
+
 			//change slides
 
 			$(".content-slide-button").click(function() {
