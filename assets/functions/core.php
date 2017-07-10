@@ -3,7 +3,7 @@
 add_filter('widget_text','do_shortcode');
 
 //Ensure that VC styles are always loaded
-add_action('joints_entry', 'blog_fillter');
+add_action('joints_entry', 'blog_filler');
 
 function blog_filler() {
 	do_shortcode('[vc_row el_class="blog-filler"][vc_column][/vc_column][/vc_row]');
@@ -102,7 +102,6 @@ function do_classes_intro($classes) {
 add_action('joints_intro', 'open_intro', 2);
 add_action('joints_intro', 'do_intro_content');
 add_action('joints_intro_content', 'open_intro_content', 2);
-add_action('joints_intro_content', 'page_breadcrumbs');
 add_action('joints_intro_content', 'get_intro_content');
 add_action('joints_intro_content', 'close_intro_content', 50);
 add_action('joints_intro_content', 'close_element', 50);
@@ -123,22 +122,6 @@ function open_intro_content() {
 }
 function do_intro_content() {
 	do_action('joints_intro_content');
-}
-function page_breadcrumbs() {
-	global $post;
-	if(is_front_page()) {
-		return;
-	}
-	echo '<div class="page-breadcrumbs">';
-	$breadcrumbs = array();
-	$breadcrumbs[] = get_the_title();
-	$ancestors = get_post_ancestors($post);
-	foreach($ancestors as $ancestor) {
-		$breadcrumbs[] = '<a href="' . get_permalink($ancestor) . '">' . get_the_title($ancestor) . '</a>';
-	}
-	$breadcrumbs = array_reverse($breadcrumbs);
-	echo implode(' \\ ', $breadcrumbs);
-	echo '</div>';
 }
 function get_intro_content() {
 	$page_for_posts_id = get_option('page_for_posts');
@@ -262,6 +245,8 @@ function the_entry_content() {
 //-------End Entry Content-------
 
 //-------Begin Sidebar
+
+add_action('joints_primary_sidebar', 'get_sidebar');
 
 add_action('joints_sidebar_inner', 'get_primary_sidebar');
 

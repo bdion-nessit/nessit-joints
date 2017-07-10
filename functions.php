@@ -115,6 +115,25 @@ function create_slide_type() {
   );
 }*/
 
+add_action('joints_intro_content', 'page_breadcrumbs');
+
+function page_breadcrumbs() {
+	global $post;
+	if(is_front_page()) {
+		return;
+	}
+	echo '<div class="page-breadcrumbs">';
+	$breadcrumbs = array();
+	$breadcrumbs[] = get_the_title();
+	$ancestors = get_post_ancestors($post);
+	foreach($ancestors as $ancestor) {
+		$breadcrumbs[] = '<a href="' . get_permalink($ancestor) . '">' . get_the_title($ancestor) . '</a>';
+	}
+	$breadcrumbs = array_reverse($breadcrumbs);
+	echo implode(' \\ ', $breadcrumbs);
+	echo '</div>';
+}
+
 //Modifies nav
 //Sets primary nav to Foundation dropdown by default
 add_action('joints_nav', 'call_nav_filter', 3);

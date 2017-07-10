@@ -1,5 +1,4 @@
 <?php 
-add_action('joints_primary_sidebar', 'get_sidebar');
 get_header(); 
 do_action('joints_before_content');
 ?>
