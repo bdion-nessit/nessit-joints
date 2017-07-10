@@ -263,6 +263,8 @@ function the_entry_content() {
 
 //-------Begin Sidebar
 
+add_action('joints_sidebar_inner', 'get_primary_sidebar');
+
 function get_primary_sidebar() {
 	if ( is_active_sidebar( 'sidebar1' ) ) {
 		dynamic_sidebar( 'sidebar1' );

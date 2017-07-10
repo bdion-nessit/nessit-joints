@@ -1,11 +1,16 @@
 <?php 
-do_action('joints_before_content');
+add_action('joints_primary_sidebar', 'get_sidebar');
 get_header(); 
+do_action('joints_before_content');
 ?>
 			
 	<div id="content">
 	
 		<div id="inner-content" class="row">
+            
+        <?php 
+            do_action('joints_secondary_sidebar');
+        ?>
 	
 		    <main id="main" class="large-8 medium-8 columns" role="main">
 		    
@@ -17,7 +22,9 @@ get_header();
 																								
 		    </main> <!-- end #main -->
 		    
-		    <?php get_sidebar(); ?>
+		  <?php 
+		      do_action('joints_primary_sidebar');
+		  ?>
 
 		</div> <!-- end #inner-content -->
 

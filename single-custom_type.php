@@ -13,30 +13,34 @@ single-bookmarks.php
 */
 ?>
 
-<?php get_header(); ?>
+<?php 
+add_action('joints_primary_sidebar', 'get_sidebar');
+get_header(); 
+do_action('joints_before_content');
+?>
 			
 <div id="content">
 
 	<div id="inner-content" class="row">
+        
+        <?php 
+            do_action('joints_secondary_sidebar');
+        ?>
 
-		<main id="main" class="large-8 medium-8 columns first" role="main">
+		<main id="main" class="large-8 medium-8 columns" role="main">
 		
-		    <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-		
-		    	<?php get_template_part( 'parts/loop', 'single' ); ?>
-		    					
-		    <?php endwhile; else : ?>
-		
-		   		<?php get_template_part( 'parts/content', 'missing' ); ?>
-
-		    <?php endif; ?>
+		    <?php do_action('joints_entry'); ?>	
 
 		</main> <!-- end #main -->
 
-		<?php get_sidebar(); ?>
+        <?php 
+            do_action('joints_primary_sidebar');
+        ?>
 
 	</div> <!-- end #inner-content -->
 
 </div> <!-- end #content -->
 
-<?php get_footer(); ?>
+<?php 
+do_action('joints_after_content');
+get_footer(); ?>
