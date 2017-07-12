@@ -219,8 +219,8 @@ function get_byline() {
 
 //-------Begin Entry Content-------
 
-add_action('joints_entry_header', 'open_entry_content', 1);
-add_action('joints_entry_header', 'close_entry_content', 99);
+add_action('joints_entry_content', 'open_entry_content', 1);
+add_action('joints_entry_content', 'close_entry_content', 99);
 add_action('joints_entry_content', 'the_entry_content', 9);
 
 function open_entry_content() {
