@@ -26,7 +26,7 @@ do_action('joints_before_content');
             do_action('joints_secondary_sidebar');
         ?>
 
-		<main id="main" class="large-8 medium-8 columns" role="main">
+		<main id="main" class="large-<?php echo $column_width; ?> medium-<?php echo $column_width; ?> columns" role="main">
 		
 		    <?php do_action('joints_entry'); ?>	
 

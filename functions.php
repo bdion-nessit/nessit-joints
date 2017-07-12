@@ -98,6 +98,12 @@ function enqueue_blog_load_more() {
 
 //-------End Shortcodes-------
 
+//-------Begin Global Variables------
+
+$column_width = 8;
+$sidebar_width = 12 - $column_width;
+
+//-------End Global Variables-------
 
 //Code to create custom post type
 
