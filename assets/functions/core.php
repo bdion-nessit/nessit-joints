@@ -29,6 +29,173 @@ function end_preloader() {
 
 //-------End external scripts-------
 
+//-------Begin Global Variables------
+
+$column_width = get_option('column_width');
+$sidebar_width = get_option('sidebar_primary_width');
+
+//-------End Global Variables------
+
+//-------Begin Custom Options------
+
+class Joints_Core_Custom_Options {
+   /**
+    * This hooks into 'customize_register' (available as of WP 3.4) and allows
+    * you to add new sections and controls to the Theme Customize screen.
+    * 
+    * Note: To enable instant preview, we have to actually write a bit of custom
+    * javascript. See live_preview() for more.
+    *  
+    * @see add_action('customize_register',$func)
+    * @param \WP_Customize_Manager $wp_customize
+    * @link http://ottopress.com/2012/how-to-leverage-the-theme-customizer-in-your-own-themes/
+    * @since MyTheme 1.0
+    */
+   public static function register ( $wp_customize ) {
+      $wp_customize->add_section( 'site_layout', 
+         array(
+            'title'       => __( 'Site Layout', 'joints' ), //Visible title of section
+            'priority'    => 35, //Determines what order this appears in
+            'capability'  => 'edit_theme_options', //Capability needed to tweak
+            'description' => __('Set standard page layout options', 'joints'), //Descriptive tooltip
+         ) 
+      );
+      
+      $wp_customize->add_setting( 'column_width', //No need to use a SERIALIZED name, as `theme_mod` settings already live under one db record
+         array(
+             'default'    => '', 
+             'type'       => 'option', 
+             'capability' => 'edit_theme_options',
+             'transport'  => 'postMessage', 
+             'default' => '8',
+         ) 
+      );       
+            
+      $wp_customize->add_control(
+         'column_width_control', //Set a unique ID for the control
+         array(
+             'label'      => __( 'Main Column Width', 'joints' ), 
+             'settings'   => 'column_width', 
+             'priority'   => 10, 
+             'section'    => 'site_layout', 
+             'type' => 'number',
+             'input_attrs' => array(
+                 'min' => '1',
+                 'max' => '12',
+             ),
+             'description' => 'Set the column width of the main content on pages with sidebars.  It\'s recommended that the total column widths equal 12.',
+         ) 
+       );
+       
+       $wp_customize->add_setting( 'sidebar_primary_width', //No need to use a SERIALIZED name, as `theme_mod` settings already live under one db record
+         array(
+             'default'    => '4', 
+             'type'       => 'option', 
+             'capability' => 'edit_theme_options',
+             'transport'  => 'postMessage', 
+         ) 
+      );       
+            
+      $wp_customize->add_control(
+         'sidebar_primary_width_control', //Set a unique ID for the control
+         array(
+             'label'      => __( 'Primary Sidebar Width', 'joints' ), 
+             'settings'   => 'sidebar_primary_width', 
+             'priority'   => 11, 
+             'section'    => 'site_layout', 
+             'type' => 'number',
+             'default' => '4',
+             'input_attrs' => array(
+                 'min' => '1',
+                 'max' => '12',
+             ),
+             'description' => 'Set the column width of the primary sidebar.  It\'s recommended that the total column widths equal 12.',
+         ) 
+       );
+     
+
+      //4. We can also change built-in settings by modifying properties. For instance, let's make some stuff use live preview JS...
+       /**
+      $wp_customize->get_setting( 'blogname' )->transport = 'postMessage';
+      $wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
+      $wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
+      $wp_customize->get_setting( 'background_color' )->transport = 'postMessage';*/
+   }
+
+   /**
+    * This will output the custom WordPress settings to the live theme's WP head.
+    * 
+    * Used by hook: 'wp_head'
+    * 
+    * @see add_action('wp_head',$func)
+    * @since MyTheme 1.0
+    */
+   public static function header_output() {
+      ?>
+      <!--Customizer CSS--> 
+      <style type="text/css">
+           <?php self::generate_css('#site-title a', 'color', 'header_textcolor', '#'); ?> 
+           <?php self::generate_css('body', 'background-color', 'background_color', '#'); ?> 
+           <?php self::generate_css('a', 'color', 'link_textcolor'); ?>
+      </style> 
+      <!--/Customizer CSS-->
+      <?php
+   }
+   
+   /**
+    * This outputs the javascript needed to automate the live settings preview.
+    * Also keep in mind that this function isn't necessary unless your settings 
+    * are using 'transport'=>'postMessage' instead of the default 'transport'
+    * => 'refresh'
+    * 
+    * Used by hook: 'customize_preview_init'
+    * 
+    * @see add_action('customize_preview_init',$func)
+    * @since MyTheme 1.0
+    */
+   public static function live_preview() {
+      wp_enqueue_script( 
+           'mytheme-themecustomizer', // Give the script a unique ID
+           get_template_directory_uri() . '/assets/js/theme-customizer.js', // Define the path to the JS file
+           array(  'jquery', 'customize-preview' ), // Define dependencies
+           '', // Define a version (optional) 
+           true // Specify whether to put in footer (leave this true)
+      );
+   }
+
+    /**
+     * This will generate a line of CSS for use in header output. If the setting
+     * ($mod_name) has no defined value, the CSS will not be output.
+     * 
+     * @uses get_theme_mod()
+     * @param string $selector CSS selector
+     * @param string $style The name of the CSS *property* to modify
+     * @param string $mod_name The name of the 'theme_mod' option to fetch
+     * @param string $prefix Optional. Anything that needs to be output before the CSS property
+     * @param string $postfix Optional. Anything that needs to be output after the CSS property
+     * @param bool $echo Optional. Whether to print directly to the page (default: true).
+     * @return string Returns a single line of CSS with selectors and a property.
+     * @since MyTheme 1.0
+     */
+    public static function generate_css( $selector, $style, $mod_name, $prefix='', $postfix='', $echo=true ) {
+      $return = '';
+      $mod = get_theme_mod($mod_name);
+      if ( ! empty( $mod ) ) {
+         $return = sprintf('%s { %s:%s; }',
+            $selector,
+            $style,
+            $prefix.$mod.$postfix
+         );
+         if ( $echo ) {
+            echo $return;
+         }
+      }
+      return $return;
+    }
+}
+
+//-------End Custom Options------
+
 //-------General Functions-------
 function close_element() {
 	?>

@@ -100,10 +100,85 @@ function enqueue_blog_load_more() {
 
 //-------Begin Global Variables------
 
-$column_width = 8;
-$sidebar_width = 12 - $column_width;
+$vc_custom_styles = "";
 
 //-------End Global Variables-------
+
+//-------Begin Custom Options------
+
+class Joints_Custom_Options extends Joints_Core_Custom_Options {
+   /**
+    * This hooks into 'customize_register' (available as of WP 3.4) and allows
+    * you to add new sections and controls to the Theme Customize screen.
+    * 
+    * Note: To enable instant preview, we have to actually write a bit of custom
+    * javascript. See live_preview() for more.
+    *  
+    * @see add_action('customize_register',$func)
+    * @param \WP_Customize_Manager $wp_customize
+    * @link http://ottopress.com/2012/how-to-leverage-the-theme-customizer-in-your-own-themes/
+    * @since MyTheme 1.0
+    */
+    
+    function __construct(){
+
+         $this->register();
+     }
+   public static function register ( $wp_customize ) {
+       //Example for adding section
+      /**$wp_customize->add_section( 'site_layout', 
+         array(
+            'title'       => __( 'Site Layout', 'joints' ), //Visible title of section
+            'priority'    => 35, //Determines what order this appears in
+            'capability'  => 'edit_theme_options', //Capability needed to tweak
+            'description' => __('Set standard page layout options', 'joints'), //Descriptive tooltip
+         ) 
+      );*/
+      /** Example for adding custom setting and control
+      $wp_customize->add_setting( 'column_width', //No need to use a SERIALIZED name, as `theme_mod` settings already live under one db record
+         array(
+             'default'    => '', 
+             'type'       => 'option', 
+             'capability' => 'edit_theme_options',
+             'transport'  => 'postMessage', 
+             'default' => '8',
+         ) 
+      );       
+            
+      $wp_customize->add_control(
+         'column_width_control', //Set a unique ID for the control
+         array(
+             'label'      => __( 'Main Column Width', 'joints' ), 
+             'settings'   => 'column_width', 
+             'priority'   => 10, 
+             'section'    => 'site_layout', 
+             'type' => 'number',
+             'input_attrs' => array(
+                 'min' => '1',
+                 'max' => '12',
+             ),
+             'description' => 'Set the column width of the main content on pages with sidebars.  It\'s recommended that the total column widths equal 12.',
+         ) 
+       );*/
+       
+       parent::register($wp_customize);
+
+   }
+
+}
+
+// Setup the Theme Customizer settings and controls...
+add_action( 'customize_register' , array( 'Joints_Custom_Options' , 'register' ) );
+
+// Output custom CSS to live site
+add_action( 'wp_head' , array( 'Joints_Custom_Options' , 'header_output' ) );
+
+
+// Enqueue live preview javascript in Theme Customizer admin screen
+add_action( 'customize_preview_init' , array( 'Joints_Custom_Options' , 'live_preview' ) );
+
+//-------End Custom Options------
+
 
 //Code to create custom post type
 
@@ -158,4 +233,13 @@ function custom_nav_filter($items, $args) {
   }
   return $items;
 }
+add_action('wp_footer', 'do_vc_custom_styles');
+
+function do_vc_custom_styles() {
+	global $vc_custom_styles;
+	echo '<style>' .
+		$vc_custom_styles . 
+	'</style>';
+}
+
 

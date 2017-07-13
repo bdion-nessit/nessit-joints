@@ -453,6 +453,7 @@ function vc_custom_button_init() {
               'Gray' => 'hover-gray',
               'White w/ Blue Text' => 'hover-blue-inverse',
               'White' => 'hover-white',
+              'Custom Colors' => 'custom',
               ),
             'std' => '',
             'dependency' => array(
@@ -460,6 +461,36 @@ function vc_custom_button_init() {
               'not_empty' => true,
               ),
             ),
+          array(
+              'type' => 'colorpicker',
+              'heading' => 'Text Color (on hover)',
+              'param_name' => 'hover_text_color',
+              'group' => 'General',
+              'dependency' => array(
+                'element' => 'hover_color',
+                'value' => 'custom',
+                ),
+             ),
+          array(
+              'type' => 'colorpicker',
+              'heading' => 'Background Color (on hover)',
+              'param_name' => 'hover_bg_color',
+              'group' => 'General',
+              'dependency' => array(
+                'element' => 'hover_color',
+                'value' => 'custom',
+                ),
+             ),
+          array(
+              'type' => 'colorpicker',
+              'heading' => 'Border Color (on hover)',
+              'param_name' => 'hover_border_color',
+              'group' => 'General',
+              'dependency' => array(
+                'element' => 'hover_color',
+                'value' => 'custom',
+                ),
+             ),
           array(
               'type' => 'colorpicker',
               'heading' => 'Text Color',
@@ -739,7 +770,6 @@ function joints_custom_vc_button($atts) {
 
   //Initialize class variable
   $button_atts['class'] = '';
-  $class = (isset($atts['el_class']) ? $atts['el_class'] : "");
   $classes_arr = array(//(isset($atts['button_size']) ? $atts['button_size'] . ' ' : "") ,
                             //$atts['content_type'] . ' ' ,
                             $class,
@@ -781,9 +811,9 @@ function joints_custom_vc_button($atts) {
     if($atts['hover_color'] === 'custom') {
       global $vc_custom_styles;
       $vc_custom_styles = (!empty($vc_custom_styles) ? $vc_custom_styles : "");
-      $style_id = preg_replace("/\./", '', uniqid('', true));
+      $style_id = 'vc-' . preg_replace("/\./", '', uniqid('', true));
       while(strpos($vc_custom_styles, $style_id) !== false) {
-        $style_id = preg_replace("/\./", '', uniqid('', true));
+        $style_id = 'vc-' . preg_replace("/\./", '', uniqid('', true));
       }
       $classes_arr[] = $style_id;
       switch($button_atts['hover_anim']) {
@@ -813,9 +843,22 @@ function joints_custom_vc_button($atts) {
           }' . PHP_EOL : '');
           break;
       }
-      $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . 'hover:before {
+      $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . ':hover:before {
             background-color: ' . $atts['hover_bg_color'] . ' !important;
           }' . PHP_EOL : '');
+      /**'&:hover {
+        &.hover-underline-slide-left-half {
+          a,
+          button {
+            &:before {
+              background-color: $color;
+            }
+          }
+        }
+        &:before {
+          background-color: $color !important;
+        }
+      }'*/
     }
     else {
       $button_atts['hover_color'] = $atts['hover_color'];
@@ -930,6 +973,7 @@ function joints_custom_posts_accordion($atts) {
   $output = $buttons . '</div>' . $output . do_shortcode($accordion) . '</div>';
   return $output;
 }
+
 
 //-------Extend Posts Grid-------
 

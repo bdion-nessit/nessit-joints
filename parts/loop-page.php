@@ -15,12 +15,8 @@ function get_page_title() {
 	do_action('joints_entry_header'); 
 
 	?>
-					
-    <section class="entry-content" itemprop="articleBody">
 
 	    <?php  do_action('joints_entry_content'); ?>
-	    
-	</section> <!-- end article section -->
 						
 	<footer class="article-footer">
 		
