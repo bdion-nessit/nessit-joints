@@ -38,11 +38,15 @@ $sidebar_width = get_option('sidebar_primary_width');
 
 //-------Begin Custom Options------
 
+//Add core custom options to theme customizer
+//To be pulled in by Joints_Custom_Options in functions.php
 class Joints_Core_Custom_Options {
    /**
     * This hooks into 'customize_register' (available as of WP 3.4) and allows
     * you to add new sections and controls to the Theme Customize screen.
     */
+    
+    //Create Site Layout Section
    public static function register ( $wp_customize ) {
       $wp_customize->add_section( 'site_layout', 
          array(
@@ -53,7 +57,8 @@ class Joints_Core_Custom_Options {
          ) 
       );
       
-      $wp_customize->add_setting( 'column_width', //No need to use a SERIALIZED name, as `theme_mod` settings already live under one db record
+       //Create setting and control for main column width on pages with sidebars
+      $wp_customize->add_setting( 'column_width', 
          array(
              'default'    => '', 
              'type'       => 'option', 
@@ -79,7 +84,8 @@ class Joints_Core_Custom_Options {
          ) 
        );
        
-       $wp_customize->add_setting( 'sidebar_primary_width', //No need to use a SERIALIZED name, as `theme_mod` settings already live under one db record
+       //Create setting and control for the primary sidebar
+       $wp_customize->add_setting( 'sidebar_primary_width', 
          array(
              'default'    => '4', 
              'type'       => 'option', 
@@ -189,11 +195,15 @@ class Joints_Core_Custom_Options {
 //-------End Custom Options------
 
 //-------General Functions-------
+
+//General function to close divs
 function close_element() {
 	?>
 	</div>
 	<?php
 }
+
+//get featured image at pre-determined size
 function get_featured() {
 	the_post_thumbnail('full');
 }
@@ -212,9 +222,16 @@ function close_vc_row_wrapper() {
 
 //-------Begin Shortcodes------
 
+//Makes the base search form widget accessible by shortcode
 add_shortcode('get_search_box', 'get_search_form');
+
+//Shortcode to use the custom button widget on pages
 add_shortcode('inline_custom_button', 'get_custom_button');
+
+//Site map shortcode for the sake of ease
 add_shortcode('joints_site_map', 'get_site_map');
+
+//Get single item slider controls
 add_shortcode('content_slider_controls', 'get_slider_content_controls');
 
 function get_custom_button($atts) {
@@ -270,19 +287,31 @@ function do_classes_intro($classes) {
 	echo 'class="' . implode(' ', $classes) . '"';
 }
 
+//open intro block with any custom-set classes
 add_action('joints_intro', 'open_intro', 2);
+
+//open intro content block
 add_action('joints_intro', 'do_intro_content');
+
+//do intro content inner hook
 add_action('joints_intro_content', 'open_intro_content', 2);
+
+//get intro content
 add_action('joints_intro_content', 'get_intro_content');
+
+//close intro content
 add_action('joints_intro_content', 'close_intro_content', 50);
 add_action('joints_intro_content', 'close_element', 50);
 add_action('joints_intro', 'close_element', 50);
 
+//open intro block with any custom-set classes
 function open_intro() {
 	?>
 	<div <?php apply_filters('intro_class', 'intro') ?>>
 	<?php
 }
+
+//open intro content block
 function open_intro_content() {
 	?>
 	<div class="intro-content">
@@ -291,15 +320,27 @@ function open_intro_content() {
 				<div class="vc_column-inner">
 	<?php
 }
+
+//Intro content inner hook
 function do_intro_content() {
 	do_action('joints_intro_content');
 }
+
+//get intro content
 function get_intro_content() {
+    
+    //get id of blog page
 	$page_for_posts_id = get_option('page_for_posts');
+    
+    //use the id of the blog page (and thus its content), for itself and for archives
 	$page = (is_home() || is_archive() ? $page_for_posts_id : null);
+    
+    //Get intro content from custom field
 	echo //(is_front_page() ? '' : get_the_title()) .
 		(function_exists('get_field') ? get_field('intro_content', $page) : '');
 }
+
+//close intro content
 function close_intro_content() {
 	?>
 	</div>
@@ -328,6 +369,8 @@ function joints_loop() {
   if (have_posts()) { 
   		while (have_posts()) { 
   			the_post();
+            
+            //load appropriate loop template for post type
     		if(get_post_type() === 'page') {
         		get_template_part( 'parts/loop', 'page' );
       		}
@@ -338,10 +381,14 @@ function joints_loop() {
       			get_template_part( 'parts/loop', 'archive' );
       		}
 		}
+      
+      //load paginated navigation for archives
 		if(is_archive() || is_front_page()) {
 			joints_page_navi();
 		}
 	}
+    
+    //if no content found
 	else {
 		get_template_part( 'parts/content', 'missing' );
 	} 
@@ -351,6 +398,7 @@ function joints_loop() {
 
 //-------Begin Entry Header
 
+//initialize classes for entry header
 add_filter('entry_header_class', 'initialize_entry_header_class', 1);
 add_filter('entry_header_class', 'do_entry_header_class', 99);
 
@@ -361,20 +409,27 @@ function do_entry_header_class($classes) {
 	echo 'class="' . implode(' ', $classes) . '"';
 }
 
+//open entry-header with custom-set classes
 add_action('joints_entry_header', 'open_entry_header', 1);
+
+//close entry header
 add_action('joints_entry_header', 'close_entry_header', 99);
 
+//open entry header with custom-set classes
 function open_entry_header() {
 	?>
 	<header <?php apply_filters('entry_header_class'); ?>>
 	<?php
 }
+
+//close entry header
 function close_entry_header() {
 	?>
 	</header>
 	<?php
 }
 
+//get title specifically for archive title
 function get_archive_title() {
 	?>
 	<h2>
@@ -382,6 +437,7 @@ function get_archive_title() {
 	<?php  
 }
 
+//get byline template
 function get_byline() {
 	get_template_part( 'parts/content', 'byline' );
 }
@@ -390,22 +446,35 @@ function get_byline() {
 
 //-------Begin Entry Content-------
 
+//open entry content
 add_action('joints_entry_content', 'open_entry_content', 1);
+
+//close entry content
 add_action('joints_entry_content', 'close_entry_content', 99);
+
+//get entry content
 add_action('joints_entry_content', 'the_entry_content', 9);
 
+//open entry content
 function open_entry_content() {
 	?>
 	<section class="entry-content" itemprop="articleBody">
 	<?php
 }
+
+//close entry content
 function close_entry_content() {
 	?>
 	</section> <!-- end article section -->
 	<?php
 }
+
+//get entry content
 function the_entry_content() {
-	if(is_archive() || is_front_page()) {
+    
+    //get content
+    //if blog page or archive, get them with "Read more" button
+	if(is_archive() || is_home()) {
 		the_content('<button class="tiny">' . __( 'Read more...', 'jointswp' ) . '</button>');
 	}
 	else {
@@ -417,10 +486,13 @@ function the_entry_content() {
 
 //-------Begin Sidebar
 
+//get standard sidebar in primary sidebar position
 add_action('joints_primary_sidebar', 'get_sidebar');
 
+//get primary sidebar inside standard sidebar
 add_action('joints_sidebar_inner', 'get_primary_sidebar');
 
+//get primary sidebar
 function get_primary_sidebar() {
 	if ( is_active_sidebar( 'sidebar1' ) ) {
 		dynamic_sidebar( 'sidebar1' );

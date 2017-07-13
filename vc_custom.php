@@ -808,20 +808,40 @@ function joints_custom_vc_button($atts) {
 
   //Pass along the hover animation color to button widget if set
   if(isset($atts['hover_color']) && !empty($button_atts['hover_anim'])) {
+      
+    //if the color is custom
     if($atts['hover_color'] === 'custom') {
+        
+        //get custom styles variable
+        //to be loaded in the site footer
       global $vc_custom_styles;
+        
+        //if custom styles variable not set yet, initialize
       $vc_custom_styles = (!empty($vc_custom_styles) ? $vc_custom_styles : "");
+        
+        //create unique class for style
       $style_id = 'vc-' . preg_replace("/\./", '', uniqid('', true));
+        
+        //check if class already exists
+        //if so, create a new one until the result is unique
       while(strpos($vc_custom_styles, $style_id) !== false) {
         $style_id = 'vc-' . preg_replace("/\./", '', uniqid('', true));
       }
+        
+        //add unique class to the list of classes to be added to button
       $classes_arr[] = $style_id;
+        
+        //get styles for the appropriate hover animation and save them to custom styles variable
       switch($button_atts['hover_anim']) {
+              
+        //fill right animation
         case 'hover-fill-right':
           $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . '.hover-fill-right:before {
             background-color: ' . $atts['hover_bg_color'] . ' !important;
           }' . PHP_EOL : '');
           break;
+              
+        //fill up animation
         case 'hover-fill-up':
           $vc_custom_styles .= '.' . $style_id . ':hover.hover-fill-up {' . 
             (isset($atts['hover_text_color']) ? 'color: ' . $atts['hover_text_color'] . ' !important;' : '') .
@@ -829,6 +849,8 @@ function joints_custom_vc_button($atts) {
             (isset($atts['hover_bg_color']) ? 'background-color: ' . $atts['hover_bg_color'] . ' !important;' : '') .
           '}' . PHP_EOL;
           break;
+              
+        //partial fill down animation
         case 'hover-partial-fill-down':
           $vc_custom_styles .= (isset($atts['hover_border_color']) ? '.' . $style_id . ':hover.hover-partial-fill-down:before {
             border-width: 1px;
@@ -836,6 +858,8 @@ function joints_custom_vc_button($atts) {
             border-color: ' . $atts['hover_border_color'] . ';
           }' . PHP_EOL : '');
           break;
+              
+        //underline slide left (half) animation
         case 'hover-underline-slide-left-half':
           $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . ':hover.hover-underline-slide-left-half a:before, 
           .' . $style_id . ':hover.hover-underline-slide-left-half button:before  {
@@ -843,23 +867,14 @@ function joints_custom_vc_button($atts) {
           }' . PHP_EOL : '');
           break;
       }
+        
+        //styles shared across animation types
       $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . ':hover:before {
             background-color: ' . $atts['hover_bg_color'] . ' !important;
           }' . PHP_EOL : '');
-      /**'&:hover {
-        &.hover-underline-slide-left-half {
-          a,
-          button {
-            &:before {
-              background-color: $color;
-            }
-          }
-        }
-        &:before {
-          background-color: $color !important;
-        }
-      }'*/
     }
+      
+    //if using pre-set hover colors
     else {
       $button_atts['hover_color'] = $atts['hover_color'];
     }

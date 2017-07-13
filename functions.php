@@ -46,6 +46,7 @@ require_once(get_template_directory().'/assets/translation/translation.php');
 
 //get core theme functions
 //Includes standard content, structure, and shortcode functions
+//Intended for items that require little to no modifcation
 require_once(get_stylesheet_directory() . '/assets/functions/core.php');
 
 //add sidebars to theme
@@ -199,7 +200,11 @@ function page_breadcrumbs() {
 	echo '<div class="page-breadcrumbs">';
 	$breadcrumbs = array();
 	$breadcrumbs[] = get_the_title();
+    
+    //Get "ancestor" posts of current posts
 	$ancestors = get_post_ancestors($post);
+    
+    //Get ancestors as links
 	foreach($ancestors as $ancestor) {
 		$breadcrumbs[] = '<a href="' . get_permalink($ancestor) . '">' . get_the_title($ancestor) . '</a>';
 	}
@@ -223,7 +228,11 @@ function call_nav_filter() {
 }
 
 function custom_nav_filter($items, $args) {
+    
+    //Only modify primary nav
   if($args->menu->slug === 'primary-nav') {
+      
+      //Add sub-menu data for foundation dropdowns
     $args->items_wrap = '<ul id="%1$s" class="%2$s horizontal dropdown menu" data-dropdown-menu>%3$s</ul>';
     $items = preg_replace('/sub\-menu/', 'sub-menu menu vertical', $items);
   }
