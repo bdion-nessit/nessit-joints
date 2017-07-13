@@ -57,6 +57,7 @@ require_once(get_stylesheet_directory() . '/button_widget.php');
 //add custom VC widgets and functions
 require_once(get_stylesheet_directory() . '/vc_custom.php');
 
+//add custom pagination functions
 require_once(get_stylesheet_directory() . '/pagination.php');
 
 //-------End required/included files-------
@@ -79,6 +80,7 @@ function get_typekit() {
 }
 */
 
+//Pagination
 add_action('wp_enqueue_scripts', 'enqueue_blog_load_more');
 add_action( 'wp_ajax_blog_load_more', 'do_blog_load_more' );
 add_action( 'wp_ajax_nopriv_blog_load_more', 'do_blog_load_more' );
@@ -100,30 +102,20 @@ function enqueue_blog_load_more() {
 
 //-------Begin Global Variables------
 
+//initialize variable
 $vc_custom_styles = "";
 
 //-------End Global Variables-------
 
 //-------Begin Custom Options------
 
+//Create custom theme settings that also import the core settings
 class Joints_Custom_Options extends Joints_Core_Custom_Options {
    /**
     * This hooks into 'customize_register' (available as of WP 3.4) and allows
     * you to add new sections and controls to the Theme Customize screen.
-    * 
-    * Note: To enable instant preview, we have to actually write a bit of custom
-    * javascript. See live_preview() for more.
-    *  
-    * @see add_action('customize_register',$func)
-    * @param \WP_Customize_Manager $wp_customize
-    * @link http://ottopress.com/2012/how-to-leverage-the-theme-customizer-in-your-own-themes/
-    * @since MyTheme 1.0
     */
     
-    function __construct(){
-
-         $this->register();
-     }
    public static function register ( $wp_customize ) {
        //Example for adding section
       /**$wp_customize->add_section( 'site_layout', 
@@ -179,6 +171,7 @@ add_action( 'customize_preview_init' , array( 'Joints_Custom_Options' , 'live_pr
 
 //-------End Custom Options------
 
+//-------Begin Functions-------
 
 //Code to create custom post type
 
@@ -210,7 +203,10 @@ function page_breadcrumbs() {
 	foreach($ancestors as $ancestor) {
 		$breadcrumbs[] = '<a href="' . get_permalink($ancestor) . '">' . get_the_title($ancestor) . '</a>';
 	}
+    //Reorder to use correct order
 	$breadcrumbs = array_reverse($breadcrumbs);
+    
+    //Concatenate the individual breadcrumbs into a single string
 	echo implode(' \\ ', $breadcrumbs);
 	echo '</div>';
 }
@@ -233,6 +229,8 @@ function custom_nav_filter($items, $args) {
   }
   return $items;
 }
+
+//Display custom styles from Visual Composer that can't be set inline
 add_action('wp_footer', 'do_vc_custom_styles');
 
 function do_vc_custom_styles() {
