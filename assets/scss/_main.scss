@@ -343,6 +343,29 @@ POSTS & CONTENT STYLES
 		height: auto;
 	}
 } 
+.post-sort {
+    cursor: pointer;
+    &.asc {
+        &:after {
+            width: 0;
+            height: 0;
+            border-bottom: 11px solid #999;
+            display: inline-block;
+            margin-left: 8px;
+            border-top-style: none;
+        } 
+    }
+    &:after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-top: 11px solid #999;
+        display: inline-block;
+        margin-left: 8px;
+    }
+}
 .wp-caption {
 	max-width: 100%;
 	background: #eee;
