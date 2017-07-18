@@ -28,7 +28,7 @@ function get_theme_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/theme_scripts.js"></script>';
 }
 
-//Pagination
+//Get the script for pagination, and allow for its ajax connection
 add_action('wp_enqueue_scripts', 'enqueue_blog_load_more');
 add_action( 'wp_ajax_blog_load_more', 'do_blog_load_more' );
 add_action( 'wp_ajax_nopriv_blog_load_more', 'do_blog_load_more' );
@@ -41,6 +41,7 @@ function enqueue_blog_load_more() {
   ));
 }
 
+//Get the script for post sorting, and allow for its ajax connection
 add_action('wp_enqueue_scripts', 'enqueue_post_sort');
 add_action( 'wp_ajax_post_sort', 'do_post_sort' );
 add_action( 'wp_ajax_nopriv_post_sort', 'do_post_sort' );
@@ -53,19 +54,7 @@ function enqueue_post_sort() {
   ));
 }
 
-//-------End external scripts-------
-
-add_filter('widget_text','do_shortcode');
-
-//Ensure that VC styles are always loaded
-add_action('joints_entry', 'blog_filler');
-
-function blog_filler() {
-	do_shortcode('[vc_row el_class="blog-filler"][vc_column][/vc_column][/vc_row]');
-}
-
-//-------Begin external scripts-------
-
+//Get preloader to display while page content loads
 add_action('wp_head', 'preloader');
 
 function preloader() {
@@ -74,6 +63,8 @@ function preloader() {
   <?php
 }
 
+//Load styles to hide preloader
+//Tucked at the bottom of the page, so that almost everything will naturally load before it
 add_action('wp_footer', 'end_preloader', 50);
 
 function end_preloader() {
@@ -84,9 +75,22 @@ function end_preloader() {
 
 //-------End external scripts-------
 
+//Tells sidebar widgets to run shortcodes on content
+add_filter('widget_text','do_shortcode');
+
+//Ensure that VC styles are always loaded
+add_action('joints_entry', 'blog_filler');
+
+function blog_filler() {
+	do_shortcode('[vc_row el_class="blog-filler"][vc_column][/vc_column][/vc_row]');
+}
+
 //-------Begin Global Variables------
 
+//Column width of main content on pages with sidebar
 $column_width = get_option('column_width');
+
+//Column width of primary sidebar on pages it's used.  
 $sidebar_width = get_option('sidebar_primary_width');
 
 //-------End Global Variables------
