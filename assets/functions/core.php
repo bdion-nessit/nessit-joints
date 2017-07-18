@@ -6,16 +6,16 @@
 require_once(get_stylesheet_directory() . '/widget_areas.php');
 
 //add custom button widget to theme
-require_once(get_stylesheet_directory() . '/button_widget.php');
+require_once(get_stylesheet_directory() . '/assets/functions/button_widget.php');
 
 //add custom VC widgets and functions
 require_once(get_stylesheet_directory() . '/vc_custom.php');
 
 //add custom pagination functions
-require_once(get_stylesheet_directory() . '/pagination.php');
+require_once(get_stylesheet_directory() . '/assets/functions/pagination.php');
 
 //Add custom sorting functionality
-require_once(get_stylesheet_directory() . '/post_sort.php');
+require_once(get_stylesheet_directory() . '/assets/functions/post_sort.php');
 
 //-------End required/included files-------
 
