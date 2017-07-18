@@ -754,7 +754,9 @@ function joints_vc_custom_posts_widget($atts) {
 }
 
 function joints_custom_vc_button($atts) {
-
+    
+    $class = (isset($atts['el_class']) ? $atts['el_class'] : "");
+    
   //Get the visual composer styles
   $css = (isset($atts['css']) ? $atts['css'] : "");
   $css_class = (!empty($css) ? apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, vc_shortcode_custom_css_class( $css, ' ' ), 'inline_custom_button', $atts ) : "");
@@ -879,7 +881,6 @@ function joints_custom_vc_button($atts) {
       $button_atts['hover_color'] = $atts['hover_color'];
     }
   }
-  $class = (isset($atts['el_class']) ? $atts['el_class'] : "");
   $button_atts['class'] = implode(' ', $classes_arr);
   $button_atts['style'] = '';
   $button_atts['style'] = (!empty($atts['color']) ? 'color: ' . $atts['color'] . ';' : "") . (!empty($atts['button_display']) ? ' display: ' . $atts['button_display'] . ';' : "");

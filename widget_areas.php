@@ -1,7 +1,7 @@
 <?php
 $args_arr = array();
 $args_arr[] = array(
-		'name' => 'Top sidebar',
+		'name' => 'Topbar',
 		'id' => 'top_sidebar',
 		'description'   => 'A widget area for the top of the page',
 		'before' => '<div class="top-sidebar>',
