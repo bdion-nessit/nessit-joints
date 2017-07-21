@@ -1,4 +1,5 @@
-.vc_shortcodes_container.wpb_vc_single_item_slider_item {
+.vc_shortcodes_container.wpb_vc_single_item_slider_item,
+.vc_shortcodes_container.wpb_vc_table_row {
 	background-color: #f5f5f5;
 }
 .wpb_vc_inline_custom_button .vc_admin_label {
@@ -46,6 +47,39 @@
 
 .vc_rotary_menu_icon.vc_element-icon {
     background-image: url('../images/rotary-menu.png');
+    background-size: contain;
+    background-position: center center;
+}
+.wpb-layout-element-button[data-element=vc_table] .vc_element-icon {
+    background-image: url('../images/table_icon.png');
+    background-size: contain;
+    background-position: center center;
+}
+
+.vc_table_icon.vc_element-icon {
+    background-image: url('../images/table_icon.png');
+    background-size: contain;
+    background-position: center center;
+}
+.wpb-layout-element-button[data-element=vc_table_row] .vc_element-icon {
+    background-image: url('../images/table_row_icon.png');
+    background-size: contain;
+    background-position: center center;
+}
+
+.vc_table_row_icon.vc_element-icon {
+    background-image: url('../images/table_row_icon.png');
+    background-size: contain;
+    background-position: center center;
+}
+.wpb-layout-element-button[data-element=vc_table_td] .vc_element-icon {
+    background-image: url('../images/table_td_icon.png');
+    background-size: contain;
+    background-position: center center;
+}
+
+.vc_table_td_icon.vc_element-icon {
+    background-image: url('../images/table_td_icon.png');
     background-size: contain;
     background-position: center center;
 }

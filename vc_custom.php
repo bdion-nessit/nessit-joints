@@ -2,9 +2,10 @@
 
 //--------Create custom widgets--------
 
+add_action('vc_before_init', 'vc_single_item_slider_init');
 add_action('vc_before_init', 'vc_linkable_column');
 add_action('vc_before_init', 'vc_rotary_menu_init');
-add_action('vc_before_init', 'vc_single_item_slider_init');
+add_action('vc_before_init', 'vc_table_init');
 add_action('vc_before_init', 'vc_custom_button_init');
 add_action('init', 'vc_custom_posts_widget_init', 35);
 add_action('init', 'vc_custom_posts_accordion_widget_init', 35);
@@ -226,6 +227,132 @@ function vc_rotary_menu_init() {
 
     }
     class WPBakeryShortCode_vc_Rotary_Menu_Item extends WPBakeryShortCodesContainer {
+
+    }
+  }
+}
+function vc_table_init() {
+	vc_map(array(
+		'name' => 'Table',
+		'base' => 'vc_table',
+		'icon' => 'vc_table_icon',
+		'as_parent' => array(
+		  'only' => 'vc_table_row',
+		  ),
+		'content_element' => true,
+		'show_settings_on_create' => false,
+		'is_container' => true,
+		'admin_enqueue_css' => get_stylesheet_directory_uri() . '/assets/css/custom-editor-style.css',
+		'params' => array(
+			array(
+				'type' => 'dropdown',
+				'heading' => 'Border Collapse',
+				'param_name' => 'border_collapse',
+				'group' => 'General',
+				'value' => array(
+					'Seperate' => 'separate',
+					'Collapse' => 'collapse',
+					'Inherit' => 'inherit',
+				),
+			),
+		  array(
+			'type' => 'textfield',
+			'heading' => 'Element ID',
+			'param_name' => 'elem_id',
+			'description' => 'Enter element ID (Note: make sure it is unique and valid according to w3c specification).',
+			'group' => 'General',
+			),
+		  array(
+			'type' => 'textfield',
+			'heading' => 'Extra class name',
+			'param_name' => 'el_class',
+			'description' => 'Style particular content element differently - add a class name and refer to it in custom CSS.',
+			'group' => 'General',
+			),
+		  array(
+			'type' => 'css_editor',
+			'heading' => 'CSS Options',
+			'param_name' => 'css',
+			'group' => 'Design options',
+			),
+		  ),
+		"js_view" => 'VcColumnView',
+    ));
+	vc_map(array(
+		'name' => 'Table Row',
+		'base' => 'vc_table_row',
+		'icon' => 'vc_table_row_icon',
+		"as_child" => array('only' => 'vc_table'),
+		'as_parent' => array(
+		  'only' => 'vc_table_td',
+		),
+		  'content_element' => true,
+		  'show_settings_on_create' => false,
+		  'is_container' => true, 
+		  'params' => array(
+			array(
+				'type' => 'textfield',
+				'heading' => 'Element ID',
+				'param_name' => 'elem_id',
+				'description' => 'Enter element ID (Note: make sure it is unique and valid according to w3c specification).',
+				'group' => 'General',
+			),
+			array(
+				'type' => 'textfield',
+				'heading' => 'Extra class name',
+				'param_name' => 'el_class',
+				'description' => 'Style particular content element differently - add a class name and refer to it in custom CSS.',
+				'group' => 'General',
+			),
+		  array(
+			'type' => 'css_editor',
+			'heading' => 'CSS Options',
+			'param_name' => 'css',
+			'group' => 'Design options',
+			),
+		  ),
+		"js_view" => 'VcColumnView',
+    ));
+	vc_map(array(
+    'name' => 'Table Cell',
+    'base' => 'vc_table_td',
+	'icon' => 'vc_table_td_icon',
+    "as_child" => array('only' => 'vc_table_row'),
+    'content_element' => true,
+    'show_settings_on_create' => false,
+    'is_container' => true,
+    'params' => array(
+      array(
+        'type' => 'textfield',
+        'heading' => 'Element ID',
+        'param_name' => 'elem_id',
+        'description' => 'Enter element ID (Note: make sure it is unique and valid according to w3c specification).',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'textfield',
+        'heading' => 'Extra class name',
+        'param_name' => 'el_class',
+        'description' => 'Style particular content element differently - add a class name and refer to it in custom CSS.',
+        'group' => 'General',
+        ),
+      array(
+        'type' => 'css_editor',
+        'heading' => 'CSS Options',
+        'param_name' => 'css',
+        'group' => 'Design options',
+        ),
+      ),
+    "js_view" => 'VcColumnView',
+    ));
+  if ( class_exists( 'WPBakeryShortCodesContainer' ) ) {
+    class WPBakeryShortCode_vc_Table extends WPBakeryShortCodesContainer {
+
+    }
+	 class WPBakeryShortCode_vc_Table_Row extends WPBakeryShortCodesContainer {
+
+    }
+    class WPBakeryShortCode_vc_Table_Td extends WPBakeryShortCodesContainer {
 
     }
   }
