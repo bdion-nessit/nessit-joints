@@ -38,14 +38,9 @@ if ( vc_shortcode_custom_css_has_property( $css, array(
 	$css_classes[] = 'vc_col-has-fill';
 }
 
-$wrapper_attributes = array();
-
 $css_class = preg_replace( '/\s+/', ' ', apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, implode( ' ', array_filter( $css_classes ) ), $this->settings['base'], $atts ) );
-$wrapper_attributes[] = 'class="' . esc_attr( trim( $css_class ) ) . '"';
-if ( ! empty( $el_id ) ) {
-	$wrapper_attributes[] = 'id="' . esc_attr( $el_id ) . '"';
-}
-$classes = array(esc_attr( trim( vc_shortcode_custom_css_class( $css ) ) ), $el_class);
+
+$classes = array(esc_attr( trim( vc_shortcode_custom_css_class( $css ) ) ), $el_class, $css_class);
 $output .= '<tr class="' . implode(' ', $classes) . '">';
 $output .= wpb_js_remove_wpautop( $content );
 $output .= '</tr>';

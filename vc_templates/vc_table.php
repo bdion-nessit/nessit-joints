@@ -33,7 +33,7 @@ $vc_custom_styles = (!empty($vc_custom_styles) ? $vc_custom_styles : "");
 $css_classes = array(
 	$this->getExtraClass( $el_class ) . $this->getCSSAnimation( $css_animation ),
 	'wpb_column',
-	'vc_column_container',
+	'vc_table',
 	$width,
 );
 
@@ -52,7 +52,7 @@ if(!empty($border_collapse)) {
 
 $css_class = preg_replace( '/\s+/', ' ', apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, implode( ' ', array_filter( $css_classes ) ), $this->settings['base'], $atts ) );
 
-$classes = array(esc_attr( trim( vc_shortcode_custom_css_class( $css ) ) ), $el_class);
+$classes = array(esc_attr( trim( vc_shortcode_custom_css_class( $css ) ) ), $el_class, $css_class);
 $output .= '<table class="' . implode(' ', $classes) . '" style="' . implode(' ', $styles_arr) . '">';
 $output .= wpb_js_remove_wpautop( $content );
 $output .= '</table>';

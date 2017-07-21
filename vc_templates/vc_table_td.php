@@ -26,9 +26,7 @@ $el_class = $this->getExtraClass( $el_class );
 $css_classes = array(
 	'wpb_row',
 	//deprecated
-	'vc_inner',
-	'vc_row-fluid',
-	'rotary-menu-item',
+	'vc_table_td',
 	$el_class,
 	vc_shortcode_custom_css_class( $css ),
 );
