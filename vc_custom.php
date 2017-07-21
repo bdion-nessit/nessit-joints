@@ -54,7 +54,7 @@ function vc_single_item_slider_init() {
       'only' => 'vc_single_item_slider',
       ),
 	'as_parent' => array(
-		'except' => 'vc_single_item_slider, vc_table_row, vc_table_td',
+		'except' => 'vc_single_item_slider, vc_table_row, vc_table_td, single_item_slider_item',
 	),
     'content_element' => true,
     'show_settings_on_create' => false,
