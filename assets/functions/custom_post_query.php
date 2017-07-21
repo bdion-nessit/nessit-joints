@@ -1,5 +1,5 @@
 <?php
-function do_post_sort() {
+function do_custom_post_query() {
     $data = filter_input_array(INPUT_POST, array(
         'data' => array(
             'filter' => FILTER_SANITIZE_STRING,
