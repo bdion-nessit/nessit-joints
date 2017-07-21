@@ -72,6 +72,17 @@
     background-size: contain;
     background-position: center center;
 }
+.wpb-layout-element-button[data-element=vc_table_th] .vc_element-icon {
+    background-image: url('../images/table_th_icon.png');
+    background-size: contain;
+    background-position: center center;
+}
+
+.vc_table_th_icon.vc_element-icon {
+    background-image: url('../images/table_th_icon.png');
+    background-size: contain;
+    background-position: center center;
+}
 .wpb-layout-element-button[data-element=vc_table_td] .vc_element-icon {
     background-image: url('../images/table_td_icon.png');
     background-size: contain;
