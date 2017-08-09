@@ -429,7 +429,7 @@ function joints_loop() {
 		}
       
       //load paginated navigation for archives
-		if(is_archive() || is_front_page()) {
+		if(is_archive() || is_home()) {
 			joints_page_navi();
 		}
 	}
