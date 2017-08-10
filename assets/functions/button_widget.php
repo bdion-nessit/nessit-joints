@@ -31,13 +31,20 @@ class Custom_Button extends WP_Widget {
 		$class .= empty($instance['hover_anim']) ? '' : ' ' . 'hover-anim ' . $instance['hover_anim'];
 		$class .= empty($instance['hover_anim']) || empty($instance['hover_color']) ? '' : ' ' . $instance['hover_color'];
 		$style = empty($instance['style']) ? '' : $instance['style'];
+		$data = empty($instance['data']) ? array() : $instance['data'];
+		
+		$data_arr = array();
+		
+		foreach($data as $i => $datum) {
+			$data_arr[] = 'data-' . $i . '="' . $datum . '"';
+		}
 		
 		$before = (!empty($link_url) ? '<a href="' . $link_url . '"' . ($is_download === 'true' ? ' download' : "") . (!empty($target) ? ' target="' . trim($target) . '"' : '') . '>' : '<button>');
 		$after = (!empty($link_url) ? '</a>' : '</button>');
 
 		// Before widget code, if any
 		if(isset($before_widget)) {
-			$before_widget = preg_replace("/\>/", ' style="' . $style . '">', $before_widget);
+			$before_widget = preg_replace("/\>/", ' style="' . $style . '" ' . implode(' ', $data_arr) . '>', $before_widget);
 			if(preg_match("/id=\"/", $before_widget)) {
 				$before_widget = preg_replace("/class=\"/", 'class="' . $class . ' ', $before_widget);
 				echo preg_replace("/id=\"[^\"]*\"/", 'id="' . $element_id . '"', $before_widget);
@@ -77,6 +84,7 @@ class Custom_Button extends WP_Widget {
 				'element_id' => '',
 				'class' => '', 
 				'style' => '',
+				'data' => array(),
 			));
 		$content = $instance['content']; 
 		$link_url = $instance['link_url'];
@@ -87,6 +95,7 @@ class Custom_Button extends WP_Widget {
 		$element_id = $instance['element_id'];
 		$class = $instance['class'];
 		$style = $instance['style'];
+		$data = $instance['data'];
 
 	   ?>
 	   <!--Widget content field START -->
@@ -208,6 +217,7 @@ class Custom_Button extends WP_Widget {
 		$instance['element_id'] = $new_instance['element_id'];
 		$instance['class'] = $new_instance['class'];
 		$instance['style'] = $new_instance['style'];
+		$instance['data'] = $new_instance['data'];
 		return $instance;
 	}
 }

@@ -687,6 +687,12 @@ function vc_custom_button_init() {
             'std' => 'Theme Default',
             ),
           */
+		  array(
+              'type' => 'textfield',
+              'heading' => 'Modal Slug',
+              'param_name' => 'button_modal',
+              'group' => 'General',
+          ),
           array(
               'type' => 'textfield',
               'heading' => 'Element ID',
@@ -1046,10 +1052,17 @@ function joints_custom_vc_button($atts) {
       $button_atts['hover_color'] = $atts['hover_color'];
     }
   }
-  $button_atts['class'] = implode(' ', $classes_arr);
-  $button_atts['style'] = '';
-  $button_atts['style'] = (!empty($atts['color']) ? 'color: ' . $atts['color'] . ';' : "") . (!empty($atts['button_display']) ? ' display: ' . $atts['button_display'] . ';' : "");
-  return '<div class="wpb_custom_button" style="' . (!empty($atts['button_display']) ? 'display: ' . $atts['button_display'] . ';' : "") . '">' . get_custom_button($button_atts) . '</div>';
+	
+	$button_atts['data'] = array();
+
+	if(!empty($atts['button_modal'])) {
+		$button_atts['data']['modal'] = $atts['button_modal'];
+	}
+	
+  	$button_atts['class'] = implode(' ', $classes_arr);
+  	$button_atts['style'] = '';
+  	$button_atts['style'] = (!empty($atts['color']) ? 'color: ' . $atts['color'] . ';' : "") . (!empty($atts['button_display']) ? ' display: ' . $atts['button_display'] . ';' : "");
+	return '<div class="wpb_custom_button" style="' . (!empty($atts['button_display']) ? 'display: ' . $atts['button_display'] . ';' : "") . '">' . get_custom_button($button_atts) . '</div>';
 }
 
 function joints_custom_posts_accordion($atts) {
