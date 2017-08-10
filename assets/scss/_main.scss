@@ -814,6 +814,65 @@ PLUGIN STYLES
 }
 */
 
+	/*********************
+	MULTI-ITEM SLIDER
+	*********************/
+
+.multi-slider-wrap {
+	width: 100%;
+	overflow: hidden;
+	padding: 0 0 54px;
+}
+
+.multi-slider {
+  white-space: nowrap;
+  display: inline-block; }
+
+.multi-slide {
+  float: none;
+  display: inline-block;
+  white-space: normal;
+  vertical-align: top;
+  height: 100%;
+  position: relative;
+  padding: 35px 4px 0;
+  box-sizing: border-box; }
+.multi-slide .multi-slide-inner {
+	border-bottom-style: solid;
+    border-bottom-width: 8px;
+    border-color: transparent;
+    height: 100%;
+    padding-bottom: 48px; }
+
+.multi-controls {
+	position: absolute;
+	-webkit-transform: translateY(-50%);
+	top: 50%;
+	left: 50px;
+	right: 50px;
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+.multi-control {
+  	cursor: pointer; 
+	pointer-events: auto;}
+.review-control:hover {
+    opacity: .75; }
+
+.multi-prev {
+  float: left; }
+
+.multi-next {
+  float: right; }
+.slider-info p,
+.slider-info strong {
+	color: #fff;
+}
+.slider-info .slide-description span {
+	min-height: 50px;
+}
+
 /*********************
 MEDIA QUERIES
 *********************/

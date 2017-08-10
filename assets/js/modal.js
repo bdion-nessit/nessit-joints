@@ -12,16 +12,14 @@ function toggle_modal() {
    }
 
 jQuery(function($) {
-	$(document).ready(function() {
 
-	    $('.custom_button').on('click', '', toggle_modal);
+	$('.custom_button').on('click', '', toggle_modal);
 
-	    $('.modal-content .close-x').click(function() {
-	      $(this).parent().parent().hide();
-	    });
-	    $('.modal-background').click(function() {
-	      $(this).parent().hide();
-	    });
-		
+	$('.modal-content .close-x').click(function() {
+		$(this).parent().parent().hide();
 	});
+	$('.modal-background').click(function() {
+		$(this).parent().hide();
+	});
+		
 });

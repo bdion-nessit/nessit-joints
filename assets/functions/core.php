@@ -23,16 +23,27 @@ require_once(get_stylesheet_directory() . '/assets/functions/custom_post_query.p
 
 //add general custom scripts 
 add_action('wp_head', 'get_theme_scripts');
+add_action('wp_head', 'get_slider_scripts');
+add_action('wp_footer', 'get_modal_scripts');
+add_action('wp_footer', 'get_multi_slider_scripts');
 
 function get_theme_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/theme_scripts.js"></script>';
 }
 
 //add single item slider scripts 
-add_action('wp_head', 'get_slider_scripts');
-
 function get_slider_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/slider.js"></script>';
+}
+
+//add modal scripts
+function get_modal_scripts() {
+	echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/modal.js"></script>';
+}
+
+//add multi item slider scripts
+function get_multi_slider_scripts() {
+	echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/multi_slider.js"></script>';
 }
 
 //Get the script for pagination, and allow for its ajax connection
@@ -268,18 +279,13 @@ function close_vc_row_wrapper() {
 
 //-------Begin Shortcodes------
 
-//Makes the base search form widget accessible by shortcode
-add_shortcode('get_search_box', 'get_search_form');
+add_shortcode('get_search_box', 'get_search_form'); //Makes the base search form widget accessible by shortcode
+add_shortcode('inline_custom_button', 'get_custom_button'); //Shortcode to use the custom button widget on page
+add_shortcode('joints_site_map', 'get_site_map'); //Site map shortcode for the sake of ease
+add_shortcode('content_slider_controls', 'get_slider_content_controls'); //Get single item slider controls
+add_shortcode('multi_slider', 'get_multi_slider'); //Get multi slider
 
 //Shortcode to use the custom button widget on pages
-add_shortcode('inline_custom_button', 'get_custom_button');
-
-//Site map shortcode for the sake of ease
-add_shortcode('joints_site_map', 'get_site_map');
-
-//Get single item slider controls
-add_shortcode('content_slider_controls', 'get_slider_content_controls');
-
 function get_custom_button($atts) {
   ob_start();
   the_widget('Custom_Button', $atts);
@@ -287,6 +293,8 @@ function get_custom_button($atts) {
   ob_end_clean();
   return $output;
 }
+
+//Site map shortcode for the sake of ease
 function get_site_map() {
   $primary = wp_get_nav_menu_items('primary-nav');
   $output = '<div class="vc_column_container vc_col-sm-3">';
@@ -306,9 +314,69 @@ function get_site_map() {
   $output .= '</div>';
   return $output;
 }
+
+//Get single item slider controls
 function get_slider_content_controls() {
   return do_shortcode('[inline_custom_button class="content-slide-prev content-slide-dir arrow-left arrow-left-blue" style="border-color: transparent;"]') . 
   do_shortcode('[inline_custom_button class="content-slide-next content-slide-dir arrow-left arrow-left-blue" style="border-color: transparent;"]');
+}
+
+//Get multi slider
+function get_multi_slider($atts) {
+	$i = 1;
+	$output = '<div class="multi-slider-wrap">
+		<div class="multi-slider"><!--';
+	if(!empty($atts['items'])) {
+		foreach($atts['items'] as $item) {
+			$styles = array();
+			$data = array();
+			
+			$bg = wp_get_attachment_url($item['img']);
+			if(!empty($bg)) {
+				$styles[] = 'background-image: url(\'' . $bg . '\')';
+			}
+			
+			if(!empty($item['meta']['title'])) {
+				$data[] = 'data-title="' . $item['meta']['title'] . '"';
+			}
+			if(!empty($item['meta']['caption'])) {
+				$data[] = 'data-caption="' . $item['meta']['caption'] . '"';
+			}
+			
+			$output .= '--><div class="multi-slide multi-slide-' . $i . ' vc_col-sm-3" style="' . implode('; ', $styles) . '" ' . implode(' ', $data) .'>
+				<div class="multi-slide-inner multi-slide-' . $i . '-inner"> 
+			  </div>
+			</div><!--';
+			$i++;
+		}	
+	}
+	else {
+		$type = (!empty($atts['type']) ? $atts['type'] : 'post');
+		$args = array(
+    	'post_type' => $type,
+		'post_status' => 'publish',
+		'posts_per_page' => -1,
+	  );
+	$query1 = new WP_Query($args);
+	if($query1->have_posts()) {
+	  while($query1->have_posts()) {
+		$query1->the_post();
+		$output .= '--><div class="multi-slide multi-slide-' . $i . ' vc_col-sm-3">
+			<div class="multi-slide-inner multi-slide-' . $i . '-inner">' . 
+			get_the_content() . 
+		  '</div>
+		</div><!--';
+		$i++;
+	  }
+  }
+  wp_reset_postdata(); 
+	}
+  $output .= '--></div>
+  <div class="multi-controls">
+    <img src="' . get_stylesheet_directory_uri() . '/images/multi_prev.png" alt="Previous Review" class="multi-control multi-prev" />
+    <img src="' . get_stylesheet_directory_uri() . '/images/multi_next.png" alt="Next Review" class="multi-control multi-next" />
+  </div>';
+  return $output . '</div>';
 }
 
 //-------End Shortcodes-------
