@@ -10,9 +10,18 @@ function slideDetails(j) {
 	});
 }
 function slideFeatured(j) {
-	j.parent().parent().siblings('.slider-featured').css('background-image', j.find('.multi-slide').first().css('background-image'));
+	var bg = j.find('.multi-slide').first().css('background-image');
+	if(!bg || bg === 'none') {
+	  bg = 'url(\'' + j.find('.multi-slide').first().find('img').attr('src') + '\')';
+	}
+	j.parent().parent().siblings('.slider-featured').css('background-image', bg);
 	j.find('.multi-slide').click(function() {
-		j.parent().parent().siblings('.slider-featured').css('background-image', jQuery(this).css('background-image'));
+		var bg = jQuery(this).css('background-image');
+		console.log(bg);
+		if(!bg || bg === 'none') {
+		  bg = 'url(\'' + jQuery(this).find('img').attr('src') + '\')';
+		}
+		j.parent().parent().siblings('.slider-featured').css('background-image', bg);
 	});
 }
 
@@ -22,16 +31,17 @@ jQuery(function($) {
 		//-------Multi-Slider Functionality-------
 
 		if($('.multi-slide').length) {
-			$('.multi-slider-wrap').each(function(i, j) {
+			$('.multi-slide-wrap').each(function(i, j) {
 				var reviewsWidth = $(j).width();
 				var curScroll = 0;
 				var slideCount = $(j).find('.multi-slide').length;
+				var controls = $(j).find('.content-slider-controls');
 				var canRotate = true;
 
 				function getVisibleSlides() {
 					switch(true) {
-						/** case (window.innerWidth > 1024):
-							return 4; */
+						case (window.innerWidth > 1024):
+							return 4;
 						case (window.innerWidth > 767):
 							return 3;
 						case (window.innerWidth > 640):
@@ -47,7 +57,7 @@ jQuery(function($) {
 					var sliderHeight = 0;
 					$(j).find('.multi-slider').height('');
 					$(j).find('.multi-slide').each(function(k, l) {
-						$(l).outerWidth(Math.max((reviewsWidth / visibleSlides), (reviewsWidth / $(j).find('.multi-slide').length)) - 8 + 'px');
+						$(l).outerWidth(Math.max((reviewsWidth / visibleSlides), (reviewsWidth / $(j).find('.multi-slide').length)) + 'px');
 						sliderHeight = Math.max(sliderHeight, $(l).outerHeight());
 					});
 					$(j).height(sliderHeight + 'px');
@@ -73,7 +83,7 @@ jQuery(function($) {
 					slideDetails($(j));
 				}
 				else {
-					console.log('fail');
+					
 				}
 				
 				$(j).on('initialize', function() {
@@ -82,8 +92,9 @@ jQuery(function($) {
 				$(window).resize(function() {
 					adjustSlides();
 				});
-				$(j).find('.multi-prev').click(function() {
-					var slideWidth = $(j).find('.multi-slide').first().outerWidth() + 8;
+				
+				controls.find('.multi-prev').click(function() {
+					var slideWidth = $(j).find('.multi-slide').first().outerWidth();
 					var oldScroll = $(j).scrollLeft();
 					var newScroll = oldScroll - slideWidth;
 					if(!canRotate) {
@@ -92,6 +103,7 @@ jQuery(function($) {
 						}, 50);
 					}
 					else {
+						console.log(newScroll);
 						canRotate = false;
 						if(newScroll < -5) {
 							$(j).animate({'scrollLeft' : ((slideWidth * slideCount) - reviewsWidth)}, 350, function() {
@@ -107,8 +119,8 @@ jQuery(function($) {
 						}
 					}
 				});
-				$(j).find('.multi-next').click(function() {
-					var slideWidth = $(j).find('.multi-slide').first().outerWidth() + 8;
+				controls.find('.multi-next').click(function() {
+					var slideWidth = $(j).find('.multi-slide').first().outerWidth();
 					var oldScroll = $(j).scrollLeft();
 					var newScroll = oldScroll + slideWidth;
 					if(!canRotate) {

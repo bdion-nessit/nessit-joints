@@ -3,6 +3,7 @@
 //--------Create custom widgets--------
 
 add_action('vc_before_init', 'vc_single_item_slider_init');
+add_action('vc_before_init', 'vc_multi_item_slider_init');
 add_action('vc_before_init', 'vc_linkable_column');
 add_action('vc_before_init', 'vc_rotary_menu_init');
 add_action('vc_before_init', 'vc_table_init');
@@ -54,7 +55,7 @@ function vc_single_item_slider_init() {
       'only' => 'vc_single_item_slider',
       ),
 	'as_parent' => array(
-		'except' => 'vc_single_item_slider, vc_table_row, vc_table_th, vc_table_td, single_item_slider_item',
+		'except' => 'vc_single_item_slider, vc_table_row, vc_table_th, vc_table_td, single_item_slider_item, multi_item_slider, multi_item_slider_item',
 	),
     'content_element' => true,
     'show_settings_on_create' => false,
@@ -88,6 +89,131 @@ function vc_single_item_slider_init() {
 
     }
     class WPBakeryShortCode_vc_Single_Item_Slider_Item extends WPBakeryShortCodesContainer {
+
+    }
+  }
+}
+function vc_multi_item_slider_init() {
+	vc_map(array(
+		'name' => 'Multi Item Slider',
+		'base' => 'vc_multi_item_slider',
+		'icon' => 'vc_multi_item_slider_icon',
+		'as_parent' => array(
+		  'only' => 'vc_multi_item_slider_item',
+		  ),
+		'content_element' => true,
+		'show_settings_on_create' => false,
+		'is_container' => true,
+		'admin_enqueue_css' => get_stylesheet_directory_uri() . '/assets/css/custom-editor-style.css',
+		'params' => array(
+			array(
+				'type' => 'checkbox',
+				'heading' => 'Included feature block for images?',
+				'param_name' => 'show_featured',
+				'group' => 'General',
+				'value' => array(
+					'Yes' => 'yes',
+				),
+				'std' => '',
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => 'Show slide title',
+				'param_name' => 'show_title',
+				'group' => 'General',
+				'value' => array(
+					'Yes' => 'yes',
+				),
+				'std' => '',
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => 'Show slide description',
+				'param_name' => 'show_desc',
+				'group' => 'General',
+				'value' => array(
+					'Yes' => 'yes',
+				),
+				'std' => '',
+			),
+			array(
+				'type' => 'textfield',
+				'heading' => 'Element ID',
+				'param_name' => 'elem_id',
+				'description' => 'Enter element ID (Note: make sure it is unique and valid according to w3c specification).',
+				'group' => 'General',
+				),
+			array(
+				'type' => 'textfield',
+				'heading' => 'Extra class name',
+				'param_name' => 'el_class',
+				'description' => 'Style particular content element differently - add a class name and refer to it in custom CSS.',
+				'group' => 'General',
+				),
+			array(
+				'type' => 'css_editor',
+				'heading' => 'CSS Options',
+				'param_name' => 'css',
+				'group' => 'Design options',
+				),
+			),
+		"js_view" => 'VcColumnView',
+		)
+	);
+  vc_map(array(
+    'name' => 'Multi Item Slider Item',
+    'base' => 'vc_multi_item_slider_item',
+    'icon' => 'vc_multi_item_slider_item_icon',
+    'as_child' => array(
+      'only' => 'vc_single_item_slider',
+      ),
+	'as_parent' => array(
+		'except' => 'vc_single_item_slider, vc_table_row, vc_table_th, vc_table_td, single_item_slider_item, multi_item_slider, multi_item_slider_item',
+	),
+    'content_element' => true,
+    'show_settings_on_create' => false,
+    'is_container' => true,
+    'params' => array(
+		array(
+			'type' => 'textfield',
+			'heading' => 'Slide Title',
+			'param_name' => 'slide_title',
+        'group' => 'General',
+        ),
+		array(
+			'type' => 'textfield',
+			'heading' => 'Slide Description',
+			'param_name' => 'slide_desc',
+			'group' => 'General',
+        ),
+		array(
+			'type' => 'textfield',
+			'heading' => 'Element ID',
+			'param_name' => 'elem_id',
+			'description' => 'Enter element ID (Note: make sure it is unique and valid according to w3c specification).',
+			'group' => 'General',
+        ),
+		array(
+			'type' => 'textfield',
+			'heading' => 'Extra class name',
+			'param_name' => 'el_class',
+			'description' => 'Style particular content element differently - add a class name and refer to it in custom CSS.',
+			'group' => 'General',
+        ),
+		array(
+			'type' => 'css_editor',
+			'heading' => 'CSS Options',
+			'param_name' => 'css',
+			'group' => 'Design options',
+        ),
+      ),
+    "js_view" => 'VcColumnView',
+    ));
+  if ( class_exists( 'WPBakeryShortCodesContainer' ) ) {
+    class WPBakeryShortCode_vc_Multi_Item_Slider extends WPBakeryShortCodesContainer {
+
+    }
+    class WPBakeryShortCode_vc_Multi_Item_Slider_Item extends WPBakeryShortCodesContainer {
 
     }
   }

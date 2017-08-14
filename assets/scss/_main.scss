@@ -238,6 +238,9 @@ NAVIGATION STYLES
 POSTS & CONTENT STYLES
 *********************/
 
+.vc_row {
+	margin: 0 !important;
+}
 .modal{
 	display: none;
 	position: fixed;
@@ -728,7 +731,6 @@ PLUGIN STYLES
 	}
 	.content-slide {
 		position: absolute;
-		top: 62px;
 		left: 0;
 		width: 100%;
 		opacity: 0;
@@ -753,12 +755,30 @@ PLUGIN STYLES
 }
 .content-slide-dir.custom_button {
 	display: inline-block;
-	height: 50px;
-	width: 28px;
+	height: 0;
+	width: 0;
+	border-bottom: 15px solid transparent;
+    border-top: 15px solid transparent;
+	border-left: none;
+	border-right: none;
 	top: 50%;
 	-webkit-transform: translateY(-50%);
     position: absolute;
     transform: translateY(-50%);
+	&.content-slide-prev {
+		border-right: 15px solid #676767;
+		left: 25px;
+		&:hover {
+			border-right-color: #333;
+		}
+	}
+	&.content-slide-next {
+		border-left: 15px solid #676767;
+		right: 25px;
+		&:hover {
+			border-left-color: #333;
+		}
+	}
 	&:after {
 		padding: 0;
 		left: 0;
@@ -818,7 +838,7 @@ PLUGIN STYLES
 	MULTI-ITEM SLIDER
 	*********************/
 
-.multi-slider-wrap {
+.multi-slide-wrap {
 	width: 100%;
 	overflow: hidden;
 	padding: 0 0 54px;
@@ -829,20 +849,22 @@ PLUGIN STYLES
   display: inline-block; }
 
 .multi-slide {
-  float: none;
-  display: inline-block;
-  white-space: normal;
-  vertical-align: top;
-  height: 100%;
-  position: relative;
-  padding: 35px 4px 0;
-  box-sizing: border-box; }
-.multi-slide .multi-slide-inner {
-	border-bottom-style: solid;
-    border-bottom-width: 8px;
-    border-color: transparent;
-    height: 100%;
-    padding-bottom: 48px; }
+	float: none;
+	display: inline-block;
+	white-space: normal;
+	vertical-align: top;
+	height: 100%;
+	position: relative;
+	padding: 35px 4px 0;
+	box-sizing: border-box; 
+	.multi-slide-inner {
+		border-bottom-style: solid;
+		border-bottom-width: 8px;
+		border-color: transparent;
+		height: 100%;
+		padding-bottom: 48px; 
+	}
+}
 
 .multi-controls {
 	position: absolute;
@@ -865,9 +887,15 @@ PLUGIN STYLES
 
 .multi-next {
   float: right; }
-.slider-info p,
-.slider-info strong {
-	color: #fff;
+.slider-info {
+	p,
+	strong {
+		
+	}
+}
+.slider-featured {
+	background-size: cover;
+	background-position: center center;
 }
 .slider-info .slide-description span {
 	min-height: 50px;

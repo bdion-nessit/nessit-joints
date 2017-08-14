@@ -25,7 +25,6 @@ require_once(get_stylesheet_directory() . '/assets/functions/custom_post_query.p
 add_action('wp_head', 'get_theme_scripts');
 add_action('wp_head', 'get_slider_scripts');
 add_action('wp_footer', 'get_modal_scripts');
-add_action('wp_footer', 'get_multi_slider_scripts');
 
 function get_theme_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/theme_scripts.js"></script>';
