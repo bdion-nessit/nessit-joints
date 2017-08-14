@@ -11,6 +11,8 @@ jQuery(function($) {
                     order:($(source).hasClass('asc') ? 'ASC' : 'DESC'),
                 },
                 callback:$(source).data('callback'),
+				taxonomy:$(source).data('taxonomy'),
+				terms:$(source).data('terms'),
             };
         }
         
@@ -55,6 +57,8 @@ jQuery(function($) {
             if(resp.type === 'string') {
                $(button).siblings('.post-sort-content').html(resp.content);
             }
+			$('.custom_button').off('click', '', toggle_modal);
+			$('.custom_button').on('click', '', toggle_modal);
         }
     });
 });

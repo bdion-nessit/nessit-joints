@@ -11,6 +11,15 @@ function do_custom_post_query() {
     foreach($data['query_data'] as $i => $item) {
         $args[$i] = $item;
     }
+	if(!empty($data['taxonomy']) && !empty($data['terms'])) {
+		$args['tax_query'] = array(
+			'relation' => 'OR',
+			array(
+				'taxonomy' => $data['taxonomy'],
+				'terms' => (preg_match("/\,/", $data['terms']) ? explode(',', $data['terms']) : $data['terms']),
+			),
+		);
+	}
     $query1 = new WP_Query($args);
     $output = array();
     if(!empty($data['callback'])) {
