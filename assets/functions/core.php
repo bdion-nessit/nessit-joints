@@ -17,6 +17,9 @@ require_once(get_stylesheet_directory() . '/assets/functions/pagination.php');
 //Add custom sorting functionality
 require_once(get_stylesheet_directory() . '/assets/functions/custom_post_query.php');
 
+//Add custom functionality for updating posts
+require_once(get_stylesheet_directory() . '/assets/functions/update_post.php');
+
 //-------End required/included files-------
 
 //-------Begin external scripts-------
@@ -67,6 +70,19 @@ function enqueue_custom_post_query() {
   wp_enqueue_script( 'custom_post_query_ajax', get_stylesheet_directory_uri() . '/assets/js/custom_post_query_ajax.js', array('jquery'), '1.0', true );
 
   wp_localize_script( 'custom_post_query_ajax', 'ajax_admin_url', array(
+    'ajax_url' => admin_url( 'admin-ajax.php' )
+  ));
+}
+
+//Get the script for updating posts, and allow for its ajax connection
+add_action('wp_enqueue_scripts', 'enqueue_update_post');
+add_action( 'wp_ajax_update_post', 'update_post' );
+add_action( 'wp_ajax_nopriv_update_post', 'update_post' );
+
+function enqueue_update_post() {
+  wp_enqueue_script( 'update_post_ajax', get_stylesheet_directory_uri() . '/assets/js/update_post_ajax.js', array('jquery'), '1.0', true );
+
+  wp_localize_script( 'update_post_ajax', 'ajax_admin_url', array(
     'ajax_url' => admin_url( 'admin-ajax.php' )
   ));
 }
