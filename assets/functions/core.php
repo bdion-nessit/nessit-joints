@@ -382,6 +382,29 @@ function get_multi_slider($atts) {
 
 //-------Begin Header Functionality-------
 
+add_action('wp_head', 'check_permission', 1);
+
+function check_permission() {
+	$permission = get_post_meta(get_the_ID(), 'restriction', true);
+	$user = wp_get_current_user();
+	
+	switch($permission) {
+		case 'user':
+			if($user->ID === 0) {
+				header('location: /login/');
+			}
+			break;
+		case 'admin': 
+			if($user->ID === 0) {
+				header('location: /login/');
+			}
+			elseif(!in_array('administrator', $user->roles)) {
+				header('location: /');
+			}
+			break;
+	}
+}
+
 add_action('joints_before_nav', 'get_site_logo');
 
 function get_site_logo() {
