@@ -105,10 +105,10 @@ function blog_filler() {
 //-------Begin Global Variables------
 
 //Column width of main content on pages with sidebar
-$column_width = get_option('column_width');
+$column_width = (!empty(get_option('column_width')) ? get_option('column_width') : 8);
 
 //Column width of primary sidebar on pages it's used.  
-$sidebar_width = get_option('sidebar_primary_width');
+$sidebar_width = (!empty(get_option('sidebar_primary_width')) ? get_option('sidebar_primary_width') : 4);
 
 //-------End Global Variables------
 
@@ -512,7 +512,7 @@ function joints_loop() {
 //-------Begin Entry Header
 
 //initialize classes for entry header
-add_filter('entry_header_class', 'initialize_entry_header_class', 1);
+//add_filter('entry_header_class', 'initialize_entry_header_class', 1);
 add_filter('entry_header_class', 'do_entry_header_class', 99);
 
 function initialize_entry_header_class() {
@@ -531,7 +531,7 @@ add_action('joints_entry_header', 'close_entry_header', 99);
 //open entry header with custom-set classes
 function open_entry_header() {
 	?>
-	<header <?php apply_filters('entry_header_class'); ?>>
+	<header <?php apply_filters('entry_header_class', array('entry-header')); ?>>
 	<?php
 }
 
