@@ -24,10 +24,9 @@ require_once(get_stylesheet_directory() . '/assets/functions/update_post.php');
 
 //-------Begin external scripts-------
 
-//add general custom scripts 
-add_action('wp_head', 'get_theme_scripts');
-add_action('wp_head', 'get_slider_scripts');
-add_action('wp_footer', 'get_modal_scripts');
+add_action('wp_head', 'get_theme_scripts'); //Add general custom scripts 
+add_action('wp_head', 'get_slider_scripts'); //Add scripts for single item sliders
+add_action('wp_footer', 'get_modal_scripts'); //Add scripts for modals
 
 function get_theme_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/theme_scripts.js"></script>';
@@ -108,15 +107,6 @@ function end_preloader() {
 
 //-------End external scripts-------
 
-//Tells sidebar widgets to run shortcodes on content
-add_filter('widget_text','do_shortcode');
-
-//Ensure that VC styles are always loaded
-add_action('joints_entry', 'blog_filler');
-
-function blog_filler() {
-	do_shortcode('[vc_row el_class="blog-filler"][vc_column][/vc_column][/vc_row]');
-}
 
 //-------Begin Global Variables------
 
@@ -267,6 +257,13 @@ class Joints_Core_Custom_Options {
 //-------End Custom Options------
 
 //-------General Functions-------
+
+add_filter('widget_text','do_shortcode'); //Tells sidebar widgets to run shortcodes on content
+add_action('joints_entry', 'blog_filler'); //Ensure that VC styles are always loaded
+
+function blog_filler() {
+	do_shortcode('[vc_row el_class="blog-filler"][vc_column][/vc_column][/vc_row]');
+}
 
 //General function to close divs
 function close_element() {
@@ -429,8 +426,8 @@ function get_site_logo() {
 
 	//-------Begin Intro Section-------
 
-add_filter('intro_class', 'initialize_classes_intro', 1);
-add_filter('intro_class', 'do_classes_intro', 99);
+add_filter('intro_class', 'initialize_classes_intro', 1); //Begin array of classes to add to intro block
+add_filter('intro_class', 'do_classes_intro', 99);	//Concatenate intro classes to a string for output
 
 function initialize_classes_intro() {
 	return array('intro');
@@ -503,7 +500,7 @@ function close_intro_content() {
 
 	//-------End Intro Section-------
 
-add_action('joints_nav', 'joints_do_topbar');
+add_action('joints_nav', 'joints_do_topbar') //Get top "sidebar";
 
 function joints_do_topbar() {
 	echo '<div class="top-sidebar">';
@@ -515,7 +512,7 @@ function joints_do_topbar() {
 
 //-------Begin Loop-------
 
-add_action('joints_entry', 'joints_loop');
+add_action('joints_entry', 'joints_loop') //Basic page content loop;
 
 function joints_loop() {
   if (have_posts()) { 
@@ -561,11 +558,8 @@ function do_entry_header_class($classes) {
 	echo 'class="' . implode(' ', $classes) . '"';
 }
 
-//open entry-header with custom-set classes
-add_action('joints_entry_header', 'open_entry_header', 1);
-
-//close entry header
-add_action('joints_entry_header', 'close_entry_header', 99);
+add_action('joints_entry_header', 'open_entry_header', 1); //open entry-header with custom-set classes
+add_action('joints_entry_header', 'close_entry_header', 99); //close entry header
 
 //open entry header with custom-set classes
 function open_entry_header() {
@@ -598,14 +592,9 @@ function get_byline() {
 
 //-------Begin Entry Content-------
 
-//open entry content
-add_action('joints_entry_content', 'open_entry_content', 1);
-
-//close entry content
-add_action('joints_entry_content', 'close_entry_content', 99);
-
-//get entry content
-add_action('joints_entry_content', 'the_entry_content', 9);
+add_action('joints_entry_content', 'open_entry_content', 1); //open entry content
+add_action('joints_entry_content', 'close_entry_content', 99); //close entry content
+add_action('joints_entry_content', 'the_entry_content', 9); //get entry content
 
 //open entry content
 function open_entry_content() {
@@ -638,11 +627,8 @@ function the_entry_content() {
 
 //-------Begin Sidebar
 
-//get standard sidebar in primary sidebar position
-add_action('joints_primary_sidebar', 'get_sidebar');
-
-//get primary sidebar inside standard sidebar
-add_action('joints_sidebar_inner', 'get_primary_sidebar');
+add_action('joints_primary_sidebar', 'get_sidebar'); //get standard sidebar in primary sidebar position
+add_action('joints_sidebar_inner', 'get_primary_sidebar'); //get primary sidebar inside standard sidebar
 
 //get primary sidebar
 function get_primary_sidebar() {

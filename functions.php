@@ -72,8 +72,7 @@ function get_typekit() {
 
 //-------Begin Global Variables------
 
-//initialize variable
-$vc_custom_styles = "";
+$vc_custom_styles = ""; //Initialize variable for creating custom vc styles in the footer
 
 //-------End Global Variables-------
 
@@ -139,6 +138,7 @@ add_action( 'wp_head' , array( 'Joints_Custom_Options' , 'header_output' ) );
 // Enqueue live preview javascript in Theme Customizer admin screen
 add_action( 'customize_preview_init' , array( 'Joints_Custom_Options' , 'live_preview' ) );
 
+
 //-------End Custom Options------
 
 //-------Begin Functions-------
@@ -159,29 +159,30 @@ function create_slide_type() {
   );
 }*/
 
-add_action('joints_intro_content', 'page_breadcrumbs');
+add_action('joints_intro_content', 'page_breadcrumbs'); //Add basic breadcrumbs to pages
 
 function page_breadcrumbs() {
 	global $post;
+	
+	//Terminate on the home page
 	if(is_front_page()) {
 		return;
 	}
 	echo '<div class="page-breadcrumbs">';
-	$breadcrumbs = array();
+
+	$breadcrumbs = array(); //Initialize array of breadcrumbs
 	$breadcrumbs[] = get_the_title();
     
-    //Get "ancestor" posts of current posts
-	$ancestors = get_post_ancestors($post);
+	$ancestors = get_post_ancestors($post);//Get "ancestor" posts of current posts
     
     //Get ancestors as links
 	foreach($ancestors as $ancestor) {
 		$breadcrumbs[] = '<a href="' . get_permalink($ancestor) . '">' . get_the_title($ancestor) . '</a>';
 	}
-    //Reorder to use correct order
-	$breadcrumbs = array_reverse($breadcrumbs);
     
-    //Concatenate the individual breadcrumbs into a single string
-	echo implode(' \\ ', $breadcrumbs);
+	$breadcrumbs = array_reverse($breadcrumbs); //Reorder to use correct order
+    
+	echo implode(' \\ ', $breadcrumbs); //Concatenate the individual breadcrumbs into a single string
 	echo '</div>';
 }
 
@@ -201,18 +202,18 @@ function custom_nav_filter($items, $args) {
     //Only modify primary nav
   if($args->menu->slug === 'primary-nav') {
       
-      //Add sub-menu data for foundation dropdowns
+	//Add sub-menu data for foundation dropdowns
     $args->items_wrap = '<ul id="%1$s" class="%2$s horizontal dropdown menu" data-dropdown-menu>%3$s</ul>';
     $items = preg_replace('/sub\-menu/', 'sub-menu menu vertical', $items);
   }
   return $items;
 }
 
-//Display custom styles from Visual Composer that can't be set inline
-add_action('wp_footer', 'do_vc_custom_styles');
+add_action('wp_footer', 'do_vc_custom_styles'); //Display custom styles from Visual Composer that can't be set inline
 
 function do_vc_custom_styles() {
 	global $vc_custom_styles;
+	
 	echo '<style>' .
 		$vc_custom_styles . 
 	'</style>';

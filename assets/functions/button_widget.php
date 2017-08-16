@@ -22,6 +22,7 @@ class Custom_Button extends WP_Widget {
 		// outputs the content of the widget
 		  // PART 1: Extracting the arguments + getting the values
 		extract($args, EXTR_SKIP);
+		
 		$content= empty($instance['content']) ? '' : $instance['content'];
 		$link_url = empty($instance['link_url']) ? '' : $instance['link_url'];
 		$target = empty($instance['target']) ? '' : $instance['target'];
@@ -33,22 +34,27 @@ class Custom_Button extends WP_Widget {
 		$style = empty($instance['style']) ? '' : $instance['style'];
 		$data = empty($instance['data']) ? array() : $instance['data'];
 		
-		$data_arr = array();
+		$data_arr = array(); //Initiazlie array of data attributes for button
 		
+		//Takes each data item provide and adds it to $data_arr as a string ready to add to the element
 		foreach($data as $i => $datum) {
 			$data_arr[] = 'data-' . $i . '="' . $datum . '"';
 		}
 		
-		$before = (!empty($link_url) ? '<a href="' . $link_url . '"' . ($is_download === 'true' ? ' download' : "") . (!empty($target) ? ' target="' . trim($target) . '"' : '') . '>' : '<button>');
-		$after = (!empty($link_url) ? '</a>' : '</button>');
+		$before = (!empty($link_url) ? '<a href="' . $link_url . '"' . ($is_download === 'true' ? ' download' : "") . (!empty($target) ? ' target="' . trim($target) . '"' : '') . '>' : '<button>'); //opening wrapper.  <a> if link, <button> otherwise
+		$after = (!empty($link_url) ? '</a>' : '</button>'); //Closing wrapper.  <a> if link, <button> otherwise
 
 		// Before widget code, if any
 		if(isset($before_widget)) {
-			$before_widget = preg_replace("/\>/", ' style="' . $style . '" ' . implode(' ', $data_arr) . '>', $before_widget);
+			$before_widget = preg_replace("/\>/", ' style="' . $style . '" ' . implode(' ', $data_arr) . '>', $before_widget); //Insert styles into button
+			
+			//If the before widget element has an ID field, replace it with the element's ID
 			if(preg_match("/id=\"/", $before_widget)) {
 				$before_widget = preg_replace("/class=\"/", 'class="' . $class . ' ', $before_widget);
 				echo preg_replace("/id=\"[^\"]*\"/", 'id="' . $element_id . '"', $before_widget);
 			}
+			
+			//Otherwise, insert the element ID before the classes
 			else {
 				echo preg_replace("/class=\"/", 'id="' . $element_id . '" class="' . $class . ' ', $before_widget);
 			}
