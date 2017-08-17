@@ -13,11 +13,9 @@ add_action('joints_entry_header', 'get_byline');
 					do_action('joints_entry_header'); //Default actions defined in core.php
 
 					do_action('joints_entry_content'); //Default actions defined in core.php
+					
+					do_action('joints_entry_footer'); //Default actions defined in core.php
 					?>
-										
-					<footer class="article-footer">
-				    	<p class="tags"><?php the_tags('<span class="tags-title">' . __('Tags:', 'jointstheme') . '</span> ', ', ', ''); ?></p>
-					</footer> <!-- end article footer -->	
 				</div>
 			</div>
 		</div>

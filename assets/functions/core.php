@@ -625,6 +625,30 @@ function the_entry_content() {
 
 //-------End Entry Content-------
 
+//-------Begin Entry Footer-------
+
+add_action('joints_entry_footer', 'open_entry_footer', 1); //Open entry footer
+add_action('joints_entry_footer', 'post_tags'); //Get the tags, if any, for the current post
+add_action('joints_entry_footer', 'close_entry_footer', 99); //Close entry footer
+
+function open_entry_footer() {
+	?>
+	<footer class="article-footer">
+	<?php
+}
+function post_tags() {
+	?>
+	<p class="tags"><?php the_tags('<span class="tags-title">' . __('Tags:', 'jointstheme') . '</span> ', ', ', ''); ?></p>
+	<?php
+}
+function close_entry_footer() {
+	?>
+		</footer>
+	<?php
+}
+
+//-------End Entry Footer-------
+
 //-------Begin Sidebar
 
 add_action('joints_primary_sidebar', 'get_sidebar'); //get standard sidebar in primary sidebar position
