@@ -20,7 +20,7 @@ do_action('joints_before_content');
 		
 		    	<?php 
 
-		    	do_action('joints_entry');
+		    	do_action('joints_entry'); //Default actions defined in core.php and includes parts/loop-archive.php
 		    	
 		    	 ?>
 		

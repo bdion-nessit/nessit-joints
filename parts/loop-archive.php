@@ -10,9 +10,9 @@ add_action('joints_entry_header', 'get_byline');
 				<div class="vc_column-inner">	
 
 					<?php 
-					do_action('joints_entry_header');
+					do_action('joints_entry_header'); //Default actions defined in core.php
 
-					do_action('joints_entry_content'); 
+					do_action('joints_entry_content'); //Default actions defined in core.php
 					?>
 										
 					<footer class="article-footer">
