@@ -7,6 +7,8 @@ function do_custom_post_query() {
         ),
     ));
     $data = $data['data'];
+	$data['query_data']['post_type'] = (!empty($data['query_data']['post_type']) ? $data['query_data']['post_type'] : 'post');
+	
     $args = array();
     foreach($data['query_data'] as $i => $item) {
         $args[$i] = $item;
@@ -28,6 +30,8 @@ function do_custom_post_query() {
         $output['type'] = 'string';
     }
 	else {
+		$output['type'] = 'string';
+		
 		if($query1->have_posts()) {
 			ob_start();
 			$j = 0;
@@ -38,11 +42,10 @@ function do_custom_post_query() {
 			}
 			$output['j'] = $j;
 			$output['content'] = ob_get_contents();
-			$output['type'] = 'string';
 			ob_end_clean();
 		}
 		else {
-			$output['content'] = $query1->posts;
+			$output['content'] = '<article id="" class="post-filler post type-' . $data['query_data']['post_type'] . ' status-publish format-standard hentry" role="article">	';
 		}
 		wp_reset_postdata();
 	}
