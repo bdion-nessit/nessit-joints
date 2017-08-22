@@ -61,3 +61,6 @@ $output .= '</div>';
 $output .= '</div>';
 
 echo $output;
+
+remove_action('wp_footer', 'get_slider_scripts'); //Add scripts for single item sliders
+add_action('wp_footer', 'get_slider_scripts'); //Add scripts for single item sliders

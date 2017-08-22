@@ -24,8 +24,7 @@ require_once(get_stylesheet_directory() . '/assets/functions/update_post.php');
 
 //-------Begin external scripts-------
 
-add_action('wp_head', 'get_theme_scripts'); //Add general custom scripts 
-add_action('wp_head', 'get_slider_scripts'); //Add scripts for single item sliders
+add_action('wp_footer', 'get_theme_scripts'); //Add general custom scripts 
 add_action('wp_footer', 'get_modal_scripts'); //Add scripts for modals
 
 function get_theme_scripts() {
