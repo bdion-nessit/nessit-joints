@@ -399,21 +399,26 @@ add_action('wp_head', 'check_permission', 1);
 function check_permission() {
 	$permission = get_post_meta(get_the_ID(), 'restriction', true);
 	$user = wp_get_current_user();
+	$logged = is_user_logged_in();
 	
 	switch($permission) {
 		case 'user':
-			if($user->ID === 0) {
+			if(!$logged) {
 				header('location: /login/');
 			}
 			break;
 		case 'admin': 
-			if($user->ID === 0) {
+			if(!$logged) {
 				header('location: /login/');
 			}
 			elseif(!in_array('administrator', $user->roles)) {
 				header('location: /');
 			}
 			break;
+		case 'no_user':
+			if($logged) {
+				header('location: /');
+			}
 	}
 }
 
