@@ -516,8 +516,34 @@ function joints_do_topbar() {
 
 //-------Begin Loop-------
 
-add_action('joints_entry', 'joints_loop') //Basic page content loop;
+add_action('joints_entry', 'archive_header_wrapper_open', 2);
+add_action('joints_entry', 'archive_header', 3);
+add_action('joints_entry', 'archive_header_wrapper_close', 9);
+add_action('joints_entry', 'joints_loop');
 
+function archive_header_wrapper_open() {
+	if(!is_archive()) {
+		return;
+	}
+	echo open_vc_row_wrapper();
+}
+function archive_header() {
+	if(!is_archive()) {
+		return;
+	}
+	?>
+	<header>
+		<h1 class="page-title"><?php the_archive_title();?></h1>
+		<?php the_archive_description('<div class="taxonomy-description">', '</div>');?>
+	</header>
+	<?php
+}
+function archive_header_wrapper_close() {
+	if(!is_archive()) {
+		return;
+	}
+	echo close_vc_row_wrapper();
+}	
 function joints_loop() {
   if (have_posts()) { 
   		while (have_posts()) { 
