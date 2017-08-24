@@ -1,7 +1,5 @@
 <?php 
-add_action('joints_entry', 'echo_open_vc_row_wrapper', 2);
-add_action('joints_entry', 'archive_header', 3);
-add_action('joints_entry', 'echo_close_vc_row_wrapper', 9);
+add_action('joints_entry_header', 'archive_header', 4);
 
 get_header(); 
 do_action('joints_before_content');
@@ -18,7 +16,7 @@ do_action('joints_before_content');
 		    <main id="main" class="large-<?php echo $column_width; ?> medium-<?php echo $column_width; ?> columns" role="main">
 		
 		    	<?php 
-
+				do_action('joints_entry_header');
 		    	do_action('joints_entry'); //Default actions defined in core.php and includes parts/loop-archive.php
 		    	
 		    	 ?>

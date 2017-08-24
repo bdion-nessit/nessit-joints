@@ -574,9 +574,6 @@ add_action('joints_entry_header', 'entry_header_row_close', 15);
 add_action('joints_entry_header', 'close_entry_header', 99); //close entry header
 
 function entry_header_row_open() {
-	if(!is_single()) {
-		return;
-	}
 	echo open_vc_row_wrapper();
 }
 function archive_header() {
@@ -588,9 +585,6 @@ function archive_header() {
 	<?php
 }
 function entry_header_row_close() {
-	if(!is_single()) {
-		return;
-	}
 	echo close_vc_row_wrapper();
 }
 //open entry header with custom-set classes
