@@ -579,8 +579,18 @@ function entry_header_row_open() {
 function archive_header() {
 	?>
 	<header>
-		<h1 class="page-title"><?php the_archive_title();?></h1>
-		<?php the_archive_description('<div class="taxonomy-description">', '</div>');?>
+		<?php
+		if(is_search()) {
+			?>
+			<h1 class="archive-title"><?php _e( 'Search Results for:', 'jointswp' ); ?> <?php echo esc_attr(get_search_query()); ?></h1>
+			<?php
+		}
+		else {
+			?>
+			<h1 class="page-title"><?php the_archive_title();?></h1>
+			<?php the_archive_description('<div class="taxonomy-description">', '</div>');
+		}
+	?>
 	</header>
 	<?php
 }

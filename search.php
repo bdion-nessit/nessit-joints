@@ -1,4 +1,6 @@
 <?php 
+add_action('joints_entry_header', 'archive_header', 4);
+
 get_header(); 
 do_action('joints_before_content');
 ?>
@@ -13,27 +15,24 @@ do_action('joints_before_content');
             ?>
 	
 			<main id="main" class="large-<?php echo $column_width; ?> medium-<?php echo $column_width; ?> columns first" role="main">
-				<header>
-					<h1 class="archive-title"><?php _e( 'Search Results for:', 'jointswp' ); ?> <?php echo esc_attr(get_search_query()); ?></h1>
-				</header>
 
-				<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+				<?php 
+				do_action('joints_entry_header');
+				if (have_posts()) {
+					while (have_posts()) {
+						the_post(); ?>
 			 
 					<!-- To see additional archive styles, visit the /parts directory -->
-					<?php get_template_part( 'parts/loop', 'archive' ); ?>
-				    
-				<?php endwhile; ?>	
-
-					<?php joints_page_navi(); ?>
-					
-				<?php else : ?>
-				
 					<?php 
+						do_action('joints_entry');
+					}
+					joints_page_navi();
+				}
+				else { 
 					get_template_part( 'parts/content', 'missing' ); 
 					blog_filler();
-					?>
-						
-			    <?php endif; ?>
+				}
+				?>
 	
 		    </main> <!-- end #main -->
 		
