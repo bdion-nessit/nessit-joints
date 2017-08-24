@@ -1,4 +1,8 @@
 <?php 
+add_action('joints_entry', 'echo_open_vc_row_wrapper', 2);
+add_action('joints_entry', 'archive_header', 3);
+add_action('joints_entry', 'echo_close_vc_row_wrapper', 9);
+
 get_header(); 
 do_action('joints_before_content');
 ?>

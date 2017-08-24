@@ -15,7 +15,7 @@ add_action('joints_entry_content', 'get_featured');
 						
    <?php do_action('joints_entry_header'); ?>
 					
-		<?php do_action('joints_entry_content'); ?>
+	<?php do_action('joints_entry_content'); ?>
 						
 	<footer class="article-footer">
 		<?php wp_link_pages( array( 'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'jointswp' ), 'after'  => '</div>' ) ); ?>

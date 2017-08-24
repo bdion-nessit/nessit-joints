@@ -282,10 +282,16 @@ function open_vc_row_wrapper($i = 12) {
             <div class="vc_col-sm-12">
                 <div class="vc_column-inner">';
 }
+function echo_open_vc_row_wrapper() {
+	echo open_vc_row_wrapper();
+}
 
 //Opens a visual composer row and column
 function close_vc_row_wrapper() {
     return '</div></div></div>';
+}
+function echo_close_vc_row_wrapper() {
+	echo close_vc_row_wrapper();
 }
 
 //-------Begin Shortcodes------
@@ -516,34 +522,8 @@ function joints_do_topbar() {
 
 //-------Begin Loop-------
 
-add_action('joints_entry', 'archive_header_wrapper_open', 2);
-add_action('joints_entry', 'archive_header', 3);
-add_action('joints_entry', 'archive_header_wrapper_close', 9);
 add_action('joints_entry', 'joints_loop');
-
-function archive_header_wrapper_open() {
-	if(!is_archive()) {
-		return;
-	}
-	echo open_vc_row_wrapper();
-}
-function archive_header() {
-	if(!is_archive()) {
-		return;
-	}
-	?>
-	<header>
-		<h1 class="page-title"><?php the_archive_title();?></h1>
-		<?php the_archive_description('<div class="taxonomy-description">', '</div>');?>
-	</header>
-	<?php
-}
-function archive_header_wrapper_close() {
-	if(!is_archive()) {
-		return;
-	}
-	echo close_vc_row_wrapper();
-}	
+	
 function joints_loop() {
   if (have_posts()) { 
   		while (have_posts()) { 
@@ -589,8 +569,30 @@ function do_entry_header_class($classes) {
 }
 
 add_action('joints_entry_header', 'open_entry_header', 1); //open entry-header with custom-set classes
+add_action('joints_entry_header', 'entry_header_row_open', 3);
+add_action('joints_entry_header', 'entry_header_row_close', 15);
 add_action('joints_entry_header', 'close_entry_header', 99); //close entry header
 
+function entry_header_row_open() {
+	if(!is_single()) {
+		return;
+	}
+	echo open_vc_row_wrapper();
+}
+function archive_header() {
+	?>
+	<header>
+		<h1 class="page-title"><?php the_archive_title();?></h1>
+		<?php the_archive_description('<div class="taxonomy-description">', '</div>');?>
+	</header>
+	<?php
+}
+function entry_header_row_close() {
+	if(!is_single()) {
+		return;
+	}
+	echo close_vc_row_wrapper();
+}
 //open entry header with custom-set classes
 function open_entry_header() {
 	?>
