@@ -31,14 +31,14 @@ function get_theme_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/theme_scripts.js"></script>';
 }
 
-//add single item slider scripts 
-function get_slider_scripts() {
-  echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/slider.js"></script>';
-}
-
 //add modal scripts
 function get_modal_scripts() {
 	echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/modal.js"></script>';
+}
+
+//add single item slider scripts 
+function get_slider_scripts() {
+  echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/slider.js"></script>';
 }
 
 //add multi item slider scripts
@@ -510,7 +510,7 @@ function close_intro_content() {
 
 	//-------End Intro Section-------
 
-add_action('joints_nav', 'joints_do_topbar') //Get top "sidebar";
+add_action('joints_nav', 'joints_do_topbar'); //Get top "sidebar";
 
 function joints_do_topbar() {
 	echo '<div class="top-sidebar">';
