@@ -1,7 +1,7 @@
 <?php
 //Remove header elements intended for single pages
 remove_action('joints_entry_header', 'entry_header_row_open', 3);
-remove_action('joints_entry_header', 'archive_header', 4);
+remove_action('joints_entry_header', 'get_entry_header', 9);
 remove_action('joints_entry_header', 'entry_header_row_close', 15);
 
 add_action('joints_entry_header', 'get_archive_title');

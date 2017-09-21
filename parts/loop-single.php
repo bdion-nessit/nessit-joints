@@ -1,12 +1,5 @@
 <?php
-add_action('joints_entry_header', 'get_single_title');
 add_action('joints_entry_header', 'get_byline');
-
-function get_single_title() {
-	?>
-	<h1 class="entry-title single-title" itemprop="headline"><?php the_title(); ?></h1>
-<?php
-}
 
 add_action('joints_entry_content', 'get_featured');
 

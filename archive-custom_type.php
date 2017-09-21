@@ -1,5 +1,5 @@
 <?php 
-add_action('joints_entry_header', 'archive_header', 4);
+add_action('joints_entry_header', 'get_entry_header', 9);
 
 get_header(); 
 do_action('joints_before_content');

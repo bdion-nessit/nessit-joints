@@ -29,6 +29,7 @@ $css_classes = array(
 	'vc_inner',
 	'vc_row-fluid',
 	'content-slide',
+	'inner-row',
 	$el_class,
 	vc_shortcode_custom_css_class( $css ),
 );

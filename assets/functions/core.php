@@ -449,18 +449,17 @@ function do_classes_intro($classes) {
 //open intro block with any custom-set classes
 add_action('joints_intro', 'open_intro', 2);
 
-//open intro content block
-add_action('joints_intro', 'do_intro_content');
+add_action('joints_intro', 'do_intro_content'); //do intro content inner hook
 
-//do intro content inner hook
-add_action('joints_intro_content', 'open_intro_content', 2);
+add_action('joints_intro_content', 'open_intro_content', 2); //open intro content block
+add_action('joints_intro_content', 'open_intro_content_wrappers', 5); //open intro content wrappers
 
 //get intro content
 add_action('joints_intro_content', 'get_intro_content');
 
 //close intro content
 add_action('joints_intro_content', 'close_intro_content', 50);
-add_action('joints_intro_content', 'close_element', 50);
+add_action('joints_intro_content', 'close_element', 55);
 add_action('joints_intro', 'close_element', 50);
 
 //open intro block with any custom-set classes
@@ -474,9 +473,14 @@ function open_intro() {
 function open_intro_content() {
 	?>
 	<div class="intro-content">
-		<div class="vc_row">
-			<div class="vc_column_container vc_col-sm-6">
-				<div class="vc_column-inner">
+		
+	<?php
+}
+function open_intro_content_wrappers() {
+	?>
+	<div class="vc_row">
+		<div class="vc_column_container vc_col-sm-6">
+			<div class="vc_column-inner">
 	<?php
 }
 
@@ -507,7 +511,6 @@ function close_intro_content() {
 			</div>
 	<?php
 }
-
 	//-------End Intro Section-------
 
 add_action('joints_nav', 'joints_do_topbar'); //Get top "sidebar";
@@ -570,13 +573,14 @@ function do_entry_header_class($classes) {
 
 add_action('joints_entry_header', 'open_entry_header', 1); //open entry-header with custom-set classes
 add_action('joints_entry_header', 'entry_header_row_open', 3);
+add_action('joints_entry_header', 'get_entry_header', 9);
 add_action('joints_entry_header', 'entry_header_row_close', 15);
 add_action('joints_entry_header', 'close_entry_header', 99); //close entry header
 
 function entry_header_row_open() {
 	echo open_vc_row_wrapper();
 }
-function archive_header() {
+function get_entry_header() {
 	?>
 	<header>
 		<?php
@@ -585,10 +589,15 @@ function archive_header() {
 			<h1 class="archive-title"><?php _e( 'Search Results for:', 'jointswp' ); ?> <?php echo esc_attr(get_search_query()); ?></h1>
 			<?php
 		}
-		else {
+		elseif(is_archive()) {
 			?>
 			<h1 class="page-title"><?php the_archive_title();?></h1>
 			<?php the_archive_description('<div class="taxonomy-description">', '</div>');
+		}
+		else {
+			?>
+			<h1 class="entry-title single-title" itemprop="headline"><?php the_title(); ?></h1>
+			<?php
 		}
 	?>
 	</header>
