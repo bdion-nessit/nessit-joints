@@ -2,9 +2,6 @@
 
 //-------Begin required/included files-------
 
-//add sidebars to theme
-require_once(get_stylesheet_directory() . '/widget_areas.php');
-
 //add custom button widget to theme
 require_once(get_stylesheet_directory() . '/assets/functions/button_widget.php');
 
