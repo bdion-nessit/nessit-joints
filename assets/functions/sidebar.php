@@ -76,7 +76,7 @@ function joints_register_sidebars() {
 
 	$args_arr[] = array(
 			'name' => 'Copyright Footer',
-			'id' => 'footer-sidebar-4',
+			'id' => 'copyright-footer',
 			'description'   => 'A footer area for copyright information and the like',
 			'before' => '<div class="copyright-footer large-12 medium-12">',
 			'after' => '</div>',
