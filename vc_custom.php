@@ -1090,7 +1090,7 @@ function joints_custom_vc_button($atts) {
           $button_atts['content'] .= wp_get_attachment_image($imgArr[1], 'full');
 
           //Add class that drives hover state
-          $button_atts['class'] .= 'has-hover ';
+          $classes_arr[] = 'has-hover';
         }
       }
       else {
