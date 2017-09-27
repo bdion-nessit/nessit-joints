@@ -358,6 +358,40 @@ POSTS & CONTENT STYLES
 		
 	}
 }
+.vc_column_container {
+	&:not(.inner-column) {
+		&.flex-gallery-wrap {
+			> .vc_column-inner {
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex: 1;
+				flex: 1;
+				* {
+					display: -webkit-flex;
+					display: flex;
+					-webkit-flex: 1;
+					flex: 1;
+				}
+			}
+		}
+	}
+}
+
+.flex-gallery {
+	margin: -1px;
+	min-height: 325px;
+	.vc_col-sm-3 {
+		flex-direction: column;
+	}
+}
+.flex-gallery-image-wrap {
+	padding: 1px;
+}
+.flex-gallery-image {
+	background-size: cover;
+	background-position: center center;
+}
+
 .post-sort {
     cursor: pointer;
 	&.sort-arrow {

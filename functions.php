@@ -219,4 +219,44 @@ function do_vc_custom_styles() {
 	'</style>';
 }
 
+//add_action('joints_entry_content', 'get_archive_intro', 8);
 
+$archive_css = '';
+function get_archive_intro() {
+	if(!is_archive()) {
+		return;
+	}
+	
+	global $archive_css;
+	$slug = '';
+	$product = get_queried_object();
+	if(is_tax()) {
+		$slug = $product->slug;
+	}
+	$args = array(
+		'post_name'	=> $slug,
+		'post_type'   => 'page',
+		'post_status' => 'publish',
+		'numberposts' => 1
+	);
+	$pos = 0;
+	$page = get_page_by_path($slug,OBJECT,'page');
+	if(!empty($page)) {
+		echo '<div class="nm-row">' . 
+			do_shortcode($page->post_content) . 
+		'</div>';
+		while(strpos($page->post_content, 'css=', $pos) !== false) {
+			$pos_start = strpos($page->post_content, 'css=', $pos) + 5;
+			$pos = strpos($page->post_content, '"', $pos_start);
+			$archive_css .= substr($page->post_content, $pos_start, $pos - $pos_start) . ' ';
+		}
+	}
+	remove_action('wp_footer', 'get_archive_css');
+	add_action('wp_footer', 'get_archive_css');
+}
+function get_archive_css() {
+	global $archive_css;
+	echo '<style>' .
+		$archive_css . 
+	'</style>';
+}

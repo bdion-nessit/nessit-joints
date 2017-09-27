@@ -8,6 +8,8 @@ add_action('vc_before_init', 'vc_linkable_column');
 add_action('vc_before_init', 'vc_rotary_menu_init');
 add_action('vc_before_init', 'vc_table_init');
 add_action('vc_before_init', 'vc_custom_button_init');
+add_action('vc_before_init', 'vc_blockquote_init');
+add_action('vc_before_init', 'vc_flex_gallery_init'); 
 add_action('init', 'vc_custom_posts_widget_init', 35);
 add_action('init', 'vc_custom_posts_accordion_widget_init', 35);
 
@@ -840,7 +842,95 @@ function vc_custom_button_init() {
       ),
    ) );
 }
-
+function vc_blockquote_init() {
+	if(!function_exists('vc_map')) {
+    return;
+  }
+	vc_map(array(
+		'name' => 'Joints Blockquote',
+		'base' => 'vc_blockquote',
+		'icon' => 'vc_blockquote_icon',
+		'params' => array(
+			array(
+				'type' => 'textarea',
+				'heading' => 'Content',
+				'param_name' => 'block_content',
+				'holder' => 'p',
+				'group' => 'General',
+				'value' => 'This is a blockquote element.',
+			),
+			array(
+				'type' => 'textfield',
+				'heading' => 'Element ID',
+				'param_name' => 'elem_id',
+				'group' => 'General',
+			),
+			array(
+				'type' => 'textfield',
+				'heading' => 'Extra class name',
+				'param_name' => 'el_class',
+				'group' => 'General',
+			),
+			array(
+				'type' => 'css_editor',
+				'heading' => 'CSS Options',
+				'param_name' => 'css',
+				'group' => 'Design options',
+			),
+		),
+	));
+}
+function vc_flex_gallery_init() {
+	if(!function_exists('vc_map')) {
+    return;
+  }
+	vc_map(array(
+		'name' => 'Joints Flex Gallery',
+		'base' => 'vc_flex_gallery',
+		'icon' => 'vc_flex_gallery_icon',
+		'params' => array(
+			array(
+				'type' => 'attach_images',
+				'heading' => 'Images',
+				'admin_label' => true,
+				'description' => 'Choose up to two images.  The second will be used as a hover state.',
+				'param_name' => 'img',
+				'value' => '',
+				'group' => 'General',
+            ),
+			array(
+				'type' => 'dropdown',
+				'heading' => 'Number of Columns',
+				'param_name' => 'num_cols',
+				'group' => 'General',
+				'value' => array(
+					'One' => 1,
+					'Two' => 2,
+					'Three' => 3,
+					'Four' => 4,
+				),
+			),
+			array(
+				'type' => 'textfield',
+				'heading' => 'Element ID',
+				'param_name' => 'elem_id',
+				'group' => 'General',
+			),
+			array(
+				'type' => 'textfield',
+				'heading' => 'Extra class name',
+				'param_name' => 'el_class',
+				'group' => 'General',
+			),
+			array(
+				'type' => 'css_editor',
+				'heading' => 'CSS Options',
+				'param_name' => 'css',
+				'group' => 'Design options',
+			),
+		),
+	));
+}
 function vc_custom_posts_accordion_widget_init() {
   if(!function_exists('vc_map')) {
     return;
@@ -925,6 +1015,8 @@ function get_tax_list($tax = 'category') {
 
 add_shortcode('vc_custom_posts_widget', 'joints_vc_custom_posts_widget');
 add_shortcode('vc_inline_custom_button', 'joints_custom_vc_button');
+add_shortcode('vc_inline_custom_button', 'joints_blockquote');
+add_shortcode('vc_inline_custom_button', 'joints_flex_gallery');
 add_shortcode('vc_custom_posts_accordion', 'joints_custom_posts_accordion');
 
 function joints_vc_custom_posts_widget($atts) {
@@ -1190,7 +1282,39 @@ function joints_custom_vc_button($atts) {
   	$button_atts['style'] = (!empty($atts['color']) ? 'color: ' . $atts['color'] . ';' : "") . (!empty($atts['button_display']) ? ' display: ' . $atts['button_display'] . ';' : "");
 	return '<div class="wpb_custom_button" style="' . (!empty($atts['button_display']) ? 'display: ' . $atts['button_display'] . ';' : "") . '">' . get_custom_button($button_atts) . '</div>';
 }
-
+function joints_blockquote($atts) {
+	$classes = array('vc_blockquote');
+	if(!empty($atts['el_class'])) {
+		$classes[] = $atts['el_class'];
+	}
+	$output = '<blockquote ' . (!empty($atts['elem_id']) ? 'id="' . $atts['elem_id'] . '" ' : "") . 'class="' . implode(' ', $classes) . '">' .
+		nl2br($atts['block_content']) . 
+	'</blockquote>';
+	return $output;
+}
+function joints_flex_gallery($atts) {
+	$output = '<div class="flex-gallery">';
+	$col_width = 12 / $atts['num_cols'];
+	$i = 0;
+	$cols = array();
+	if(!empty($atts['img'])) {
+		$imgs = explode(',', $atts['img']);
+		foreach($imgs as $img) {
+			$cols[$i][] = '<div class="flex-gallery-image-wrap">
+				<div class="flex-gallery-image" style="background-image: url(' . wp_get_attachment_url($img) . ')"></div>
+			</div>';
+			$i++;
+			if($i >= $atts['num_cols']) {
+				$i = 0;
+			}
+		}
+		foreach($cols as $col) {
+			$output .= '<div class="vc_column_container vc_col-sm-' . $col_width . '">' . implode('', $col) . '</div>';
+		}
+	}
+	
+	return $output . '</div>';
+}
 function joints_custom_posts_accordion($atts) {
   $output = '<div class="post-accordions-wrap">';
   $accordion = '';
