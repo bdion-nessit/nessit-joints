@@ -260,3 +260,11 @@ function get_archive_css() {
 		$archive_css . 
 	'</style>';
 }
+
+add_action('joints_before_nav', 'mobile_menu_hamburger'); //Add default hamburger menu
+
+function mobile_menu_hamburger() {
+	echo '<div class="hamburger-menu-wrap" data-target=".top-sidebar">
+		<span class="hamburger-menu"></span>
+	</div>';
+}
