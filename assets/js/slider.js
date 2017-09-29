@@ -18,7 +18,11 @@ jQuery(function($) {
 				$(k).find('.content-slide').each(function(l,m) {
 					$(m).show();
 					left += windowWidth;
+					$(m).css('height', 'auto')
+						.css('bottom', 'auto');
 					slideHeight = Math.max(slideHeight, $(m).height());
+					$(m).css('height', '')
+						.css('bottom', '');
 				});
 				$(k).height(slideHeight);
 			}			
