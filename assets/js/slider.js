@@ -1,3 +1,5 @@
+var singleSliders = [];
+
 jQuery(function($) {
 	$(document).ready(function() {
 		$('.content-slide-wrap').each(function(i, j) {
@@ -18,27 +20,54 @@ jQuery(function($) {
 				$(k).find('.content-slide').each(function(l,m) {
 					$(m).show();
 					left += windowWidth;
-					$(m).css('height', 'auto')
-						.css('bottom', 'auto');
 					slideHeight = Math.max(slideHeight, $(m).height());
-					$(m).css('height', '')
-						.css('bottom', '');
 				});
-				$(k).height(slideHeight);
-			}			
+				if(!$(j).hasClass('form-slide-wrap')) {
+                   $(k).height(slideHeight + 100);
+                }
+			}	
+			function formSlideHeight() {
+				if(!$(j).hasClass('form-slide-wrap')) {
+                   return;
+                }
+				var curSlide = $(k).find('.content-slide.active');
+				$(k).height(curSlide.height() + 225);
+			}
 
 			//initializes slides
+			formSlideHeight();
 			positionSlides(0);
+			
 
+			function singleSlider(j, k, windowWidth, scrollPos) {
+				this.j = j;
+				this.k = k;
+				this.windowWidth = windowWidth;
+				this.scrollPos = scrollPos;
+				this.positionSlides = positionSlides;
+				this.formSlideHeight = formSlideHeight;
+				this.resize = function() {
+					var windowScale = $('body').width() / windowWidth;
+					scrollPos = scrollPos * windowScale;
+					windowWidth = $('body').width();
+					formSlideHeight();
+					positionSlides(0);
+					$('body').scrollLeft(scrollPos);
+
+				};
+			}
+			
+			var sliderObject = new singleSlider(j, k, windowWidth, scrollPos);
+
+			singleSliders.push(sliderObject);
+			
 			//adjust slides on resize
 			$(window).resize(function() {
-				var windowScale = $('body').width() / windowWidth;
-				scrollPos = scrollPos * windowScale;
-				windowWidth = $('body').width();
-				positionSlides(0);
-				$('body').scrollLeft(scrollPos);
-
+				sliderObject.resize();
 			});
+            
+            $('.form-slide-prev').hide();
+			
 		var userSlide = true;
 			
 			var buttons = "";

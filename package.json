@@ -16,6 +16,7 @@
     "gulp-autoprefixer": "^2.3.1",
     "gulp-babel": "^6.1.2",
     "gulp-bower": "0.0.10",
+    "gulp-bower-update-all": "^1.1.2",
     "gulp-concat": "^2.5.2",
     "gulp-cssnano": "^2.1.1",
     "gulp-install": "^1.1.0",
