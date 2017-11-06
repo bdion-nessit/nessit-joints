@@ -22,23 +22,22 @@ require_once(get_stylesheet_directory() . '/assets/functions/update_post.php');
 //-------Begin external scripts-------
 
 add_action('wp_footer', 'get_theme_scripts'); //Add general custom scripts 
-add_action('wp_footer', 'get_modal_scripts'); //Add scripts for modals
+add_action('wp_footer', 'get_modal_scripts');
 
 function get_theme_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/theme_scripts.js"></script>';
 }
 
-//add modal scripts
 function get_modal_scripts() {
 	echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/modal.js"></script>';
 }
 
-//add single item slider scripts 
+//Only output to page if one or more sliders present on page
 function get_slider_scripts() {
   echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/slider.js"></script>';
 }
 
-//add multi item slider scripts
+//Only output to page if one or more sliders present on page
 function get_multi_slider_scripts() {
 	echo '<script type="text/javascript" src="' . get_stylesheet_directory_uri() . '/assets/js/multi_slider.js"></script>';
 }
@@ -82,8 +81,7 @@ function enqueue_update_post() {
   ));
 }
 
-//Get preloader to display while page content loads
-add_action('wp_head', 'preloader');
+add_action('wp_head', 'preloader'); //Default preloader for page content
 
 function preloader() {
   ?>
@@ -106,11 +104,9 @@ function end_preloader() {
 
 //-------Begin Global Variables------
 
-//Column width of main content on pages with sidebar
-$column_width = (!empty(get_option('column_width')) ? get_option('column_width') : 8);
+$column_width = (!empty(get_option('column_width')) ? get_option('column_width') : 8); //Column width of main content on pages with sidebar
 
-//Column width of primary sidebar on pages it's used.  
-$sidebar_width = (!empty(get_option('sidebar_primary_width')) ? get_option('sidebar_primary_width') : 4);
+$sidebar_width = (!empty(get_option('sidebar_primary_width')) ? get_option('sidebar_primary_width') : 4); //Column width of primary sidebar on pages it's used.  
 
 //-------End Global Variables------
 
@@ -128,9 +124,9 @@ class Joints_Core_Custom_Options {
    public static function register ( $wp_customize ) {
       $wp_customize->add_section( 'site_layout', 
          array(
-            'title'       => __( 'Site Layout', 'joints' ), //Visible title of section
-            'priority'    => 35, //Determines what order this appears in
-            'capability'  => 'edit_theme_options', //Capability needed to tweak
+            'title'       => __( 'Site Layout', 'joints' ), 
+            'priority'    => 35, 
+            'capability'  => 'edit_theme_options',
             'description' => __('Set standard page layout options', 'joints'), //Descriptive tooltip
          ) 
       );
@@ -144,10 +140,9 @@ class Joints_Core_Custom_Options {
              'transport'  => 'postMessage', 
              'default' => '8',
          ) 
-      );       
-            
+      );     
       $wp_customize->add_control(
-         'column_width_control', //Set a unique ID for the control
+         'column_width_control', 
          array(
              'label'      => __( 'Main Column Width', 'joints' ), 
              'settings'   => 'column_width', 
@@ -171,9 +166,8 @@ class Joints_Core_Custom_Options {
              'transport'  => 'postMessage', 
          ) 
       );       
-            
       $wp_customize->add_control(
-         'sidebar_primary_width_control', //Set a unique ID for the control
+         'sidebar_primary_width_control', 
          array(
              'label'      => __( 'Primary Sidebar Width', 'joints' ), 
              'settings'   => 'sidebar_primary_width', 
@@ -254,14 +248,13 @@ class Joints_Core_Custom_Options {
 
 //-------General Functions-------
 
-add_filter('widget_text','do_shortcode'); //Tells sidebar widgets to run shortcodes on content
-add_action('joints_entry', 'blog_filler'); //Ensure that VC styles are always loaded
+add_filter('widget_text','do_shortcode'); //Enable text widgets to process shortcodes
+add_action('joints_entry', 'blog_filler'); //Filler to ensure that VC styles are loaded on pages without VC content
 
 function blog_filler() {
 	do_shortcode('[vc_row el_class="blog-filler"][vc_column][/vc_column][/vc_row]');
 }
 
-//General function to close divs
 function close_element() {
 	?>
 	</div>
@@ -273,7 +266,7 @@ function get_featured() {
 	the_post_thumbnail('full');
 }
 
-//Opens a visual composer row with a column inside of the user's choice of size
+//Timesaver for creating wrapping rows
 function open_vc_row_wrapper($i = 12) {
     return '<div class="vc_row">
             <div class="vc_col-sm-12">
@@ -283,7 +276,6 @@ function echo_open_vc_row_wrapper() {
 	echo open_vc_row_wrapper();
 }
 
-//Opens a visual composer row and column
 function close_vc_row_wrapper() {
     return '</div></div></div>';
 }
@@ -294,25 +286,27 @@ function echo_close_vc_row_wrapper() {
 //-------Begin Shortcodes------
 
 add_shortcode('get_search_box', 'get_search_form'); //Makes the base search form widget accessible by shortcode
-add_shortcode('inline_custom_button', 'get_custom_button'); //Shortcode to use the custom button widget on page
-add_shortcode('joints_site_map', 'get_site_map'); //Site map shortcode for the sake of ease
-add_shortcode('content_slider_controls', 'get_slider_content_controls'); //Get single item slider controls
-add_shortcode('multi_slider', 'get_multi_slider'); //Get multi slider
+add_shortcode('inline_custom_button', 'get_custom_button'); //Allow use of the custom button widget on page
+add_shortcode('joints_site_map', 'get_site_map'); //For the sake of easy
+add_shortcode('content_slider_controls', 'get_slider_content_controls');
+add_shortcode('multi_slider', 'get_multi_slider');
 
-//Shortcode to use the custom button widget on pages
+
 function get_custom_button($atts) {
-  ob_start();
-  the_widget('Custom_Button', $atts);
-  $output = ob_get_contents();
-  ob_end_clean();
-  return $output;
+	//Using ob because the_widget automatically writes to the page
+	ob_start();
+	the_widget('Custom_Button', $atts);
+	$output = ob_get_contents();
+	ob_end_clean();
+	return $output;
 }
 
-//Site map shortcode for the sake of ease
 function get_site_map() {
   $primary = wp_get_nav_menu_items('primary-nav');
   $output = '<div class="vc_column_container vc_col-sm-3">';
   $i = 1;
+
+	//Pull primary menu items and nest them under their parents
   foreach($primary as $ind => $item) {
     if($item->menu_item_parent == 0 ) {
       if($ind != 0){
@@ -329,13 +323,13 @@ function get_site_map() {
   return $output;
 }
 
-//Get single item slider controls
 function get_slider_content_controls() {
   return do_shortcode('[inline_custom_button class="content-slide-prev content-slide-dir arrow-left arrow-left-blue" style="border-color: transparent;"]') . 
   do_shortcode('[inline_custom_button class="content-slide-next content-slide-dir arrow-left arrow-left-blue" style="border-color: transparent;"]');
 }
 
-//Get multi slider
+//Not VC multi slider controls
+//Instead allows for slider to be built outside of VC
 function get_multi_slider($atts) {
 	$i = 1;
 	$output = '<div class="multi-slider-wrap">
@@ -350,6 +344,7 @@ function get_multi_slider($atts) {
 				$styles[] = 'background-image: url(\'' . $bg . '\')';
 			}
 			
+			//Title and caption to display when individual item is selected
 			if(!empty($item['meta']['title'])) {
 				$data[] = 'data-title="' . $item['meta']['title'] . '"';
 			}
@@ -357,6 +352,7 @@ function get_multi_slider($atts) {
 				$data[] = 'data-caption="' . $item['meta']['caption'] . '"';
 			}
 			
+			//Add empty slide to be displayed as an image. 
 			$output .= '--><div class="multi-slide multi-slide-' . $i . ' vc_col-sm-3" style="' . implode('; ', $styles) . '" ' . implode(' ', $data) .'>
 				<div class="multi-slide-inner multi-slide-' . $i . '-inner"> 
 			  </div>
@@ -367,10 +363,10 @@ function get_multi_slider($atts) {
 	else {
 		$type = (!empty($atts['type']) ? $atts['type'] : 'post');
 		$args = array(
-    	'post_type' => $type,
-		'post_status' => 'publish',
-		'posts_per_page' => -1,
-	  );
+			'post_type' => $type,
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+		);
 	$query1 = new WP_Query($args);
 	if($query1->have_posts()) {
 	  while($query1->have_posts()) {
@@ -397,7 +393,7 @@ function get_multi_slider($atts) {
 
 //-------Begin Header Functionality-------
 
-add_action('wp_head', 'check_permission', 1);
+add_action('wp_head', 'check_permission', 1); //For use with pods to restrict access to content
 
 function check_permission() {
 	$permission = get_post_meta(get_the_ID(), 'restriction', true);
@@ -433,8 +429,8 @@ function get_site_logo() {
 
 	//-------Begin Intro Section-------
 
-add_filter('intro_class', 'initialize_classes_intro', 1); //Begin array of classes to add to intro block
-add_filter('intro_class', 'do_classes_intro', 99);	//Concatenate intro classes to a string for output
+add_filter('intro_class', 'initialize_classes_intro', 1); 
+add_filter('intro_class', 'do_classes_intro', 99);	//Concatenate intro classes for final output
 
 function initialize_classes_intro() {
 	return array('intro');
@@ -443,30 +439,25 @@ function do_classes_intro($classes) {
 	echo 'class="' . implode(' ', $classes) . '"';
 }
 
-//open intro block with any custom-set classes
 add_action('joints_intro', 'open_intro', 2);
 
-add_action('joints_intro', 'do_intro_content'); //do intro content inner hook
+add_action('joints_intro', 'do_intro_content');
 
-add_action('joints_intro_content', 'open_intro_content', 2); //open intro content block
-add_action('joints_intro_content', 'open_intro_content_wrappers', 5); //open intro content wrappers
+add_action('joints_intro_content', 'open_intro_content', 2); 
+add_action('joints_intro_content', 'open_intro_content_wrappers', 5); 
 
-//get intro content
 add_action('joints_intro_content', 'get_intro_content');
 
-//close intro content
 add_action('joints_intro_content', 'close_intro_content', 50);
 add_action('joints_intro_content', 'close_element', 55);
 add_action('joints_intro', 'close_element', 50);
 
-//open intro block with any custom-set classes
 function open_intro() {
 	?>
 	<div <?php apply_filters('intro_class', 'intro') ?>>
 	<?php
 }
 
-//open intro content block
 function open_intro_content() {
 	?>
 	<div class="intro-content">
@@ -486,7 +477,6 @@ function do_intro_content() {
 	do_action('joints_intro_content');
 }
 
-//get intro content
 function get_intro_content() {
     
     //get id of blog page
@@ -495,12 +485,10 @@ function get_intro_content() {
     //use the id of the blog page (and thus its content), for itself and for archives
 	$page = (is_home() || is_archive() ? $page_for_posts_id : null);
     
-    //Get intro content from custom field
 	echo //(is_front_page() ? '' : get_the_title()) .
 		(function_exists('get_field') ? get_field('intro_content', $page) : '');
 }
 
-//close intro content
 function close_intro_content() {
 	?>
 	</div>
@@ -508,6 +496,7 @@ function close_intro_content() {
 			</div>
 	<?php
 }
+
 	//-------End Intro Section-------
 
 add_action('joints_nav', 'joints_do_topbar'); //Get top "sidebar";
@@ -529,7 +518,6 @@ function joints_loop() {
   		while (have_posts()) { 
   			the_post();
             
-            //load appropriate loop template for post type
     		if(get_post_type() === 'page') {
         		get_template_part( 'parts/loop', 'page' );
       		}
@@ -547,7 +535,6 @@ function joints_loop() {
 		}
 	}
     
-    //if no content found
 	else {
 		get_template_part( 'parts/content', 'missing' );
 	} 
@@ -557,7 +544,6 @@ function joints_loop() {
 
 //-------Begin Entry Header
 
-//initialize classes for entry header
 //add_filter('entry_header_class', 'initialize_entry_header_class', 1);
 add_filter('entry_header_class', 'do_entry_header_class', 99);
 
@@ -568,11 +554,11 @@ function do_entry_header_class($classes) {
 	echo 'class="' . implode(' ', $classes) . '"';
 }
 
-add_action('joints_entry_header', 'open_entry_header', 1); //open entry-header with custom-set classes
+add_action('joints_entry_header', 'open_entry_header', 1); 
 add_action('joints_entry_header', 'entry_header_row_open', 3);
 add_action('joints_entry_header', 'get_entry_header', 9);
 add_action('joints_entry_header', 'entry_header_row_close', 15);
-add_action('joints_entry_header', 'close_entry_header', 99); //close entry header
+add_action('joints_entry_header', 'close_entry_header', 99); 
 
 function entry_header_row_open() {
 	echo open_vc_row_wrapper();
@@ -603,21 +589,19 @@ function get_entry_header() {
 function entry_header_row_close() {
 	echo close_vc_row_wrapper();
 }
-//open entry header with custom-set classes
+
 function open_entry_header() {
 	?>
 	<header <?php apply_filters('entry_header_class', array('entry-header')); ?>>
 	<?php
 }
 
-//close entry header
 function close_entry_header() {
 	?>
 	</header>
 	<?php
 }
 
-//get title specifically for archive title
 function get_archive_title() {
 	?>
 	<h2>
@@ -625,7 +609,6 @@ function get_archive_title() {
 	<?php  
 }
 
-//get byline template
 function get_byline() {
 	get_template_part( 'parts/content', 'byline' );
 }
@@ -634,28 +617,24 @@ function get_byline() {
 
 //-------Begin Entry Content-------
 
-add_action('joints_entry_content', 'open_entry_content', 1); //open entry content
-add_action('joints_entry_content', 'close_entry_content', 99); //close entry content
-add_action('joints_entry_content', 'the_entry_content', 9); //get entry content
+add_action('joints_entry_content', 'open_entry_content', 1);
+add_action('joints_entry_content', 'close_entry_content', 99); 
+add_action('joints_entry_content', 'the_entry_content', 9); 
 
-//open entry content
 function open_entry_content() {
 	?>
 	<section class="entry-content" itemprop="articleBody">
 	<?php
 }
 
-//close entry content
 function close_entry_content() {
 	?>
 	</section> <!-- end article section -->
 	<?php
 }
 
-//get entry content
 function the_entry_content() {
-    
-    //get content
+
     //if blog page or archive, get them with "Read more" button
 	if(is_archive() || is_home()) {
 		the_content('<button class="tiny">' . __( 'Read more...', 'jointswp' ) . '</button>');
@@ -669,9 +648,9 @@ function the_entry_content() {
 
 //-------Begin Entry Footer-------
 
-add_action('joints_entry_footer', 'open_entry_footer', 1); //Open entry footer
-add_action('joints_entry_footer', 'post_tags'); //Get the tags, if any, for the current post
-add_action('joints_entry_footer', 'close_entry_footer', 99); //Close entry footer
+add_action('joints_entry_footer', 'open_entry_footer', 1); 
+add_action('joints_entry_footer', 'post_tags'); 
+add_action('joints_entry_footer', 'close_entry_footer', 99); 
 
 function open_entry_footer() {
 	?>
@@ -693,8 +672,8 @@ function close_entry_footer() {
 
 //-------Begin Sidebar
 
-add_action('joints_primary_sidebar', 'get_sidebar'); //get standard sidebar in primary sidebar position
-add_action('joints_sidebar_inner', 'get_primary_sidebar'); //get primary sidebar inside standard sidebar
+add_action('joints_primary_sidebar', 'get_sidebar'); //Place standard sidebar in primary sidebar position
+add_action('joints_sidebar_inner', 'get_primary_sidebar'); //get main sidebar inside standard sidebar
 
 //get primary sidebar
 function get_primary_sidebar() {

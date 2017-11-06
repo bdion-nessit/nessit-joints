@@ -128,15 +128,11 @@ class Joints_Custom_Options extends Joints_Core_Custom_Options {
 
 }
 
-// Setup the Theme Customizer settings and controls...
-add_action( 'customize_register' , array( 'Joints_Custom_Options' , 'register' ) );
+add_action( 'customize_register' , array( 'Joints_Custom_Options' , 'register' ) );// Setup the Theme Customizer settings and controls...
 
-// Output custom CSS to live site
-add_action( 'wp_head' , array( 'Joints_Custom_Options' , 'header_output' ) );
+add_action( 'wp_head' , array( 'Joints_Custom_Options' , 'header_output' ) ); // Output custom CSS to live site
 
-
-// Enqueue live preview javascript in Theme Customizer admin screen
-add_action( 'customize_preview_init' , array( 'Joints_Custom_Options' , 'live_preview' ) );
+add_action( 'customize_preview_init' , array( 'Joints_Custom_Options' , 'live_preview' ) ); // Enqueue live preview javascript in Theme Customizer admin screen
 
 
 //-------End Custom Options------
@@ -159,7 +155,7 @@ function create_slide_type() {
   );
 }*/
 
-add_action('joints_intro_content', 'page_breadcrumbs'); //Add basic breadcrumbs to pages
+add_action('joints_intro_content', 'page_breadcrumbs');
 
 function page_breadcrumbs() {
 	global $post;
@@ -170,10 +166,10 @@ function page_breadcrumbs() {
 	}
 	echo '<div class="page-breadcrumbs">';
 
-	$breadcrumbs = array(); //Initialize array of breadcrumbs
+	$breadcrumbs = array(); //Initialize breadcrumbs
 	$breadcrumbs[] = get_the_title();
     
-	$ancestors = get_post_ancestors($post);//Get "ancestor" posts of current posts
+	$ancestors = get_post_ancestors($post);
     
     //Get ancestors as links
 	foreach($ancestors as $ancestor) {
@@ -186,7 +182,7 @@ function page_breadcrumbs() {
 	echo '</div>';
 }
 
-//Modifies nav
+//For modifying nav
 //Sets primary nav to Foundation dropdown by default
 add_action('joints_nav', 'call_nav_filter', 3);
 
@@ -199,7 +195,6 @@ function call_nav_filter() {
 
 function custom_nav_filter($items, $args) {
     
-    //Only modify primary nav
   if($args->menu->slug === 'primary-nav') {
       
 	//Add sub-menu data for foundation dropdowns
@@ -209,7 +204,7 @@ function custom_nav_filter($items, $args) {
   return $items;
 }
 
-add_action('wp_footer', 'do_vc_custom_styles'); //Display custom styles from Visual Composer that can't be set inline
+add_action('wp_footer', 'do_vc_custom_styles'); //Display styles from Visual Composer that can't be set inline
 
 function do_vc_custom_styles() {
 	global $vc_custom_styles;
@@ -221,13 +216,17 @@ function do_vc_custom_styles() {
 
 //add_action('joints_entry_content', 'get_archive_intro', 8);
 
-$archive_css = '';
+$archive_css = ''; //VC styles, because they won't load right in archives by default
+
+//Pulls in intro content for archives.
+//Allows content (for archives) to be pulled in from WP pages when they usually can't be
 function get_archive_intro() {
 	if(!is_archive()) {
 		return;
 	}
 	
 	global $archive_css;
+	
 	$slug = '';
 	$product = get_queried_object();
 	if(is_tax()) {
@@ -245,6 +244,8 @@ function get_archive_intro() {
 		echo '<div class="nm-row">' . 
 			do_shortcode($page->post_content) . 
 		'</div>';
+		
+		//Extract styles from VC shortcode
 		while(strpos($page->post_content, 'css=', $pos) !== false) {
 			$pos_start = strpos($page->post_content, 'css=', $pos) + 5;
 			$pos = strpos($page->post_content, '"', $pos_start);
@@ -261,7 +262,7 @@ function get_archive_css() {
 	'</style>';
 }
 
-add_action('joints_before_nav', 'mobile_menu_hamburger'); //Add default hamburger menu
+add_action('joints_before_nav', 'mobile_menu_hamburger');
 
 function mobile_menu_hamburger() {
 	echo '<div class="hamburger-menu-wrap" data-target=".top-sidebar">

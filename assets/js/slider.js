@@ -1,4 +1,4 @@
-var singleSliders = {};
+var singleSliders = {}; //Store single items sliders for later access
 
 jQuery(function($) {
 	$(document).ready(function() {
@@ -14,6 +14,7 @@ jQuery(function($) {
 			var curScrollLeft = 0;
 			
 			//Positions the slides relative to the window size
+			//Uses height of larges slide
 			function positionSlides(left) {
 				var slideHeight = 100;
 
@@ -22,10 +23,13 @@ jQuery(function($) {
 					left += windowWidth;
 					slideHeight = Math.max(slideHeight, $(m).height());
 				});
+				
+				//make sure slider isn't also a form
 				if(!$(j).hasClass('form-slide-wrap')) {
                    $(k).height(slideHeight + 100);
                 }
 			}	
+			
 			function formSlideHeight() {
 				if(!$(j).hasClass('form-slide-wrap')) {
                    return;
@@ -38,7 +42,7 @@ jQuery(function($) {
 			formSlideHeight();
 			positionSlides(0);
 			
-
+			//Single item slider "object" "class"
 			function singleSlider(j, k, windowWidth, scrollPos) {
 				this.j = j;
 				this.k = k;
@@ -53,11 +57,11 @@ jQuery(function($) {
 					formSlideHeight();
 					positionSlides(0);
 					$('body').scrollLeft(scrollPos);
-
 				};
 			}
 			
 			var sliderObject = new singleSlider(j, k, windowWidth, scrollPos);
+			
 			var sliderId = $(j).data('slider_id');
 			if(sliderId) {
 			   singleSliders[sliderId] = sliderObject;
@@ -66,15 +70,15 @@ jQuery(function($) {
 				singleSliders.push(sliderObject);
 			}
 			
-			//adjust slides on resize
 			$(window).resize(function() {
 				sliderObject.resize();
 			});
             
-            $('.form-slide-prev').hide();
+            $('.form-slide-prev').hide(); //Hide back button as slider loads on first slide
 			
 		var userSlide = true;
 			
+			//Create buttons to jump to each slide, dynamically
 			var buttons = "";
 			for(var a = 1; a <= $(k).find('.content-slide').length; a++) {
 				if(a === 1) {
@@ -94,18 +98,24 @@ jQuery(function($) {
 			controls.find('.content-slide-prev').after(buttons);
 
 			//change slides
-
 			$(".content-slide-button").click(function() {
 				
 				if(!$(this).hasClass('active')) {
 					userSlide = false;
-					var curSlide = $(j).find('.content-slide:eq(' + (parseInt(controls.find(".active").data('slide')) - 1) + ')');
+					
+					//Consider overhauling to just get active slide directly
+					var curSlide = $(j).find('.content-slide:eq(' + (parseInt(controls.find(".active").data('slide')) - 1) + ')'); //Gets active slide by finding the slide that corresponds to the "active" button
 					controls.find(".active").removeClass('active');
+					
 					$(this).addClass('active');
-					var newSlide = $(j).find('.content-slide:eq(' + (parseInt($(this).data('slide')) - 1) + ')');
+					var newSlide = $(j).find('.content-slide:eq(' + (parseInt($(this).data('slide')) - 1) + ')'); //Gets the slide being moved to by finding the slide that corresponds to the clicked button
+					
 					curSlide.css('opacity', 0).removeClass('active');
 					newSlide.css('opacity', 1).addClass('active');
 					curScrollLeft = newSlide.index() * k.width();
+					
+					//Slider becomes scrollable at mobile sizes
+					//In such cases, use debouncing to control behavior
 					if(window.innerWidth <= 768) {
 						canScroll = false;
 						if(scrollDebounce) {
@@ -121,39 +131,44 @@ jQuery(function($) {
 					setTimeout(function() { midClick = false; }, 25);
 				}
 			});
+			
+			//In order to reduce complexity, clicking the "previous" or "next" buttons behaves as if you had clicked the button of the previous or next slide, respectively
 			$('.content-slide-prev').click(function() {
-				if(!(controls.find('.active').prev().prev(".content-slide-button").length <= 0)) {
-					controls.find('.active').prev().prev(".content-slide-button").last().trigger('click');
+				if(!(controls.find('.active').prevAll()(".content-slide-button").length <= 0)) {
+					controls.find('.active').prevAll(".content-slide-button").last().trigger('click');
 				}
 				else {
 					controls.find('.content-slide-button').last().trigger('click');
 				}
 			});
 			$('.content-slide-next').click(function() {
-				if(!(controls.find('.active').next().next(".content-slide-button").length <= 0)) {
-					controls.find('.active').next().next(".content-slide-button").first().trigger('click');
+				if(!(controls.find('.active').nextAll()(".content-slide-button").length <= 0)) {
+					controls.find('.active').nextAll()(".content-slide-button").first().trigger('click');
 				}
 				else {
 					controls.find('.content-slide-button').first().trigger('click');
 				}
 			});
+			
+			//When user is done scrolling, finish scrolling slide for them if needed
 			jQuery('.content-slide-wrap > .vc_column-inner').scroll(function() { 
 				if(midClick || window.innerWidth >= 768 || !canScroll) {
-					console.log(canScroll);
 					return;
 				}
+				
+				//Scrolling right
 				if($(this).scrollLeft() > curScrollLeft && $(this).find('.active').next().length) {
-					console.log('right');
-					var offsetMod = $(this).find('.active').next().offset().left % $(this).parent().width()
+					var offsetMod = $(this).find('.active').next().offset().left % $(this).parent().width(); //How far scrolled current slide is
 					if($(this).find('.active').next().offset().left < $(this).parent().width() && offsetMod < ($(this).parent().width() / 2) && offsetMod !== 0) {
 						midClick = true;
 						$(this).parent().siblings('.content-slider-controls').find('.content-slide-next').trigger('click');
 					}
 				}
+				
+				//Scrolling left
 				else {
-					console.log('left');
 					if($(this).scrollLeft() < curScrollLeft && $(this).find('.active').prev().length) {
-						var offsetMod = Math.abs($(this).find('.active').prev().offset().left) % $(this).parent().width()
+						var offsetMod = Math.abs($(this).find('.active').prev().offset().left) % $(this).parent().width(); //How far scrolled current slide is
 						if(Math.abs($(this).find('.active').prev().offset().left) < $(this).parent().width() && offsetMod < ($(this).parent().width() / 2) && offsetMod !== 0) {
 							midClick = true;
 							$(this).parent().siblings('.content-slider-controls').find('.content-slide-prev').trigger('click');

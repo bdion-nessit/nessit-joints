@@ -1,6 +1,7 @@
 function updateFavorites(data, button) {
 	jQuery(button).siblings('.favorite-count').html(data.count + ' Favorites');
 }
+
 function initializeButtons() {
 	jQuery(function($) {
 		$('.custom_button').off('click', '', toggle_modal);
