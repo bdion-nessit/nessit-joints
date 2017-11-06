@@ -151,6 +151,7 @@ jQuery(function($) {
 			});
 			
 			//When user is done scrolling, finish scrolling slide for them if needed
+			//Keeps the slider cleaner looking and aims to make scrolling easier
 			jQuery('.content-slide-wrap > .vc_column-inner').scroll(function() { 
 				if(midClick || window.innerWidth >= 768 || !canScroll) {
 					return;
@@ -158,7 +159,9 @@ jQuery(function($) {
 				
 				//Scrolling right
 				if($(this).scrollLeft() > curScrollLeft && $(this).find('.active').next().length) {
-					var offsetMod = $(this).find('.active').next().offset().left % $(this).parent().width(); //How far scrolled current slide is
+					var offsetMod = $(this).find('.active').next().offset().left % $(this).parent().width(); //How far in the left edge of the next slide is
+					
+					//Checks if the next slide is visible and scrolled in enough to be worth finishing the scroll
 					if($(this).find('.active').next().offset().left < $(this).parent().width() && offsetMod < ($(this).parent().width() / 2) && offsetMod !== 0) {
 						midClick = true;
 						$(this).parent().siblings('.content-slider-controls').find('.content-slide-next').trigger('click');
@@ -168,7 +171,9 @@ jQuery(function($) {
 				//Scrolling left
 				else {
 					if($(this).scrollLeft() < curScrollLeft && $(this).find('.active').prev().length) {
-						var offsetMod = Math.abs($(this).find('.active').prev().offset().left) % $(this).parent().width(); //How far scrolled current slide is
+						var offsetMod = Math.abs($(this).find('.active').prev().offset().left) % $(this).parent().width(); //How far in the left edge of the prev slide is
+						
+						//Checks if the prev slide is visible and scrolled in enough to be worth finishing the scroll
 						if(Math.abs($(this).find('.active').prev().offset().left) < $(this).parent().width() && offsetMod < ($(this).parent().width() / 2) && offsetMod !== 0) {
 							midClick = true;
 							$(this).parent().siblings('.content-slider-controls').find('.content-slide-prev').trigger('click');
