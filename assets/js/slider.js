@@ -1,4 +1,4 @@
-var singleSliders = [];
+var singleSliders = {};
 
 jQuery(function($) {
 	$(document).ready(function() {
@@ -58,8 +58,13 @@ jQuery(function($) {
 			}
 			
 			var sliderObject = new singleSlider(j, k, windowWidth, scrollPos);
-
-			singleSliders.push(sliderObject);
+			var sliderId = $(j).data('slider_id');
+			if(sliderId) {
+			   singleSliders[sliderId] = sliderObject;
+			}
+			else {
+				singleSliders.push(sliderObject);
+			}
 			
 			//adjust slides on resize
 			$(window).resize(function() {
