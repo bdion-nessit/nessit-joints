@@ -13,13 +13,14 @@ do_action('joints_before_content');
 	
 		    <main id="main" class="large-<?php echo $column_width; ?> medium-<?php echo $column_width; ?> columns" role="main">
 	
-				<?php do_action('joints_entry'); ?>							
+				<?php 
+				do_action('joints_entry'); //Functionality found in core.php
+				?>							
 			    					
 			</main> <!-- end #main -->
 
 		  <?php 
-		      add_action('joints_primary_sidebar', 'get_sidebar');
-		      do_action('joints_primary_sidebar');
+		      do_action('joints_primary_sidebar'); //Main sidebar loads here by default
 		  ?>
 		    
 		</div> <!-- end #inner-content -->

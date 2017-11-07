@@ -689,11 +689,6 @@ COMMENT FORM STYLES
 	margin: 0 0 1.1em;
 }
 
-// cancel comment reply link  
-#cancel-comment-reply {
-	a {}
-}
-
 // logged in comments  
 .comments-logged-in-as {}
 
@@ -725,16 +720,6 @@ SIDEBARS & ASIDES
 
 		li {
 			list-style: none;
-
-			&:first-child {}
-
-			&:last-child {}
-
-			a {}
-
-			// deep nesting  
-			ul {}
-
 		}
 	}
 }

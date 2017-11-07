@@ -1025,6 +1025,7 @@ function joints_vc_custom_posts_widget($atts) {
   $row_size = intval((!empty($atts['row_size']) ? $atts['row_size'] : 3));
   $col_width = 12 / $row_size;
   $post_count = (!empty($atts['post_count']) ? $atts['post_count'] : 3); 
+	
   $args = array(
       'post_type' => $post_types,
       'posts_per_page' => $post_count,
@@ -1034,6 +1035,7 @@ function joints_vc_custom_posts_widget($atts) {
       $tax_arr = array(
         'relation' => 'AND',
         );
+	  
       $tax_types = (!empty($atts['tax_type']) ? explode(',', $atts['tax_type']) : array('category'));
       $cats = explode(',', $atts['post_cats']);
       foreach($tax_types as $tax_type) {
@@ -1065,22 +1067,23 @@ function joints_vc_custom_posts_widget($atts) {
             if($query1->have_posts()) {
                 while($query1->have_posts()) {
 
-                  //Get category if post has one
                   $cat = get_the_category($query1->post->ID);
 
-                  //Array for storing post meta data
                   $posts_meta = array();
+					
                   //Get the author profile picture if option set to yes
                   $author_pic = get_the_author_meta('profile_picture');
                   $posts_meta[] = (!empty($atts['show_author_img']) ? '<span class="post-author-img">' . 
                           wp_get_attachment_image($author_pic['ID'], 'thumbnail') . 
                         '</span>' : '');
+					
                    //Get the author profile picture if option set to yes
                   $posts_meta[] = (!empty($atts['show_author']) ? '<span class="post-author">
                         By: <a href="' . get_author_posts_url( get_the_author_meta( 'ID' )) . '">' . 
                           get_the_author() . 
                         '</a>
                       </span>' : '');
+					
                    //Get the post date if option set to yes
                   $posts_meta[] = (!empty($atts['show_date']) ? '<span class="post-date">' . 
                         get_the_date('m.d.y') . '</span>' : '');
@@ -1103,7 +1106,6 @@ function joints_vc_custom_posts_widget($atts) {
 
                       '<h3 class="single-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>' . 
 
-                      //Display any post meta set to be shown
                       (!empty($posts_meta) && !empty($posts_meta[0]) ? '<div class="post-meta">' . implode('&nbsp;&nbsp;&nbsp;', $posts_meta) . '</div>' : '') .
                       '<div class="post-content">' . get_the_excerpt() . '</div>
                     </div>';
@@ -1152,14 +1154,13 @@ function joints_custom_vc_button($atts) {
 
   $target = (isset($atts['link']) ? vc_build_link($atts['link']) : "");
 
-  //Pass along link target to button widget if set
+  //Pass along link attributes to button widget if set
   $button_atts['link_url'] = (isset($target['url']) ? $target['url'] : "");
   $button_atts['target'] = (isset($target['target']) ? $target['target'] : "");
 
   //Tell button widget if target is a download
   $button_atts['is_download'] = (isset($atts['is_download']) && $atts['is_download'] === 'yes' ? 'true': false);
 
-  //Initialize class variable
   $button_atts['class'] = '';
   $classes_arr = array(//(isset($atts['button_size']) ? $atts['button_size'] . ' ' : "") ,
                             //$atts['content_type'] . ' ' ,
@@ -1167,7 +1168,7 @@ function joints_custom_vc_button($atts) {
                             $css_class,
                             (!empty($atts['button_display']) ? ' full-width': ""));
 
-  //Format button content base on content type set
+  //Format button content
   switch($atts['content_type']) {
     case 'text': 
       $button_atts['content'] = (isset($atts['title']) ? $atts['title'] : "");
@@ -1181,7 +1182,6 @@ function joints_custom_vc_button($atts) {
         if(!empty($imgArr[1])) {
           $button_atts['content'] .= wp_get_attachment_image($imgArr[1], 'full');
 
-          //Add class that drives hover state
           $classes_arr[] = 'has-hover';
         }
       }
@@ -1191,23 +1191,18 @@ function joints_custom_vc_button($atts) {
       break;
   }
 
-  //Pass along id to button widget if set
   $button_atts['element_id'] = (isset($atts['elem_id']) ? $atts['elem_id'] : "");
 
-  //Pass along the hover animation type to button widget if set
   $button_atts['hover_anim'] = (isset($atts['hover_anim']) ? $atts['hover_anim'] : "");
 
   //Pass along the hover animation color to button widget if set
   if(isset($atts['hover_color']) && !empty($button_atts['hover_anim'])) {
       
-    //if the color is custom
     if($atts['hover_color'] === 'custom') {
         
-        //get custom styles variable
-        //to be loaded in the site footer
+        //get custom styles variable to be loaded in the site footer
       global $vc_custom_styles;
         
-        //if custom styles variable not set yet, initialize
       $vc_custom_styles = (!empty($vc_custom_styles) ? $vc_custom_styles : "");
         
         //create unique class for style
@@ -1218,21 +1213,17 @@ function joints_custom_vc_button($atts) {
       while(strpos($vc_custom_styles, $style_id) !== false) {
         $style_id = 'vc-' . preg_replace("/\./", '', uniqid('', true));
       }
-        
-        //add unique class to the list of classes to be added to button
+
       $classes_arr[] = $style_id;
         
-        //get styles for the appropriate hover animation and save them to custom styles variable
       switch($button_atts['hover_anim']) {
-              
-        //fill right animation
+
         case 'hover-fill-right':
           $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . '.hover-fill-right:before {
             background-color: ' . $atts['hover_bg_color'] . ' !important;
           }' . PHP_EOL : '');
           break;
-              
-        //fill up animation
+
         case 'hover-fill-up':
           $vc_custom_styles .= '.' . $style_id . ':hover.hover-fill-up {' . 
             (isset($atts['hover_text_color']) ? 'color: ' . $atts['hover_text_color'] . ' !important;' : '') .
@@ -1240,8 +1231,7 @@ function joints_custom_vc_button($atts) {
             (isset($atts['hover_bg_color']) ? 'background-color: ' . $atts['hover_bg_color'] . ' !important;' : '') .
           '}' . PHP_EOL;
           break;
-              
-        //partial fill down animation
+
         case 'hover-partial-fill-down':
           $vc_custom_styles .= (isset($atts['hover_border_color']) ? '.' . $style_id . ':hover.hover-partial-fill-down:before {
             border-width: 1px;
@@ -1249,8 +1239,7 @@ function joints_custom_vc_button($atts) {
             border-color: ' . $atts['hover_border_color'] . ';
           }' . PHP_EOL : '');
           break;
-              
-        //underline slide left (half) animation
+
         case 'hover-underline-slide-left-half':
           $vc_custom_styles .= (isset($atts['hover_bg_color']) ? '.' . $style_id . ':hover.hover-underline-slide-left-half a:before, 
           .' . $style_id . ':hover.hover-underline-slide-left-half button:before  {

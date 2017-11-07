@@ -1,23 +1,29 @@
 var canCheckSticky = true;
 
+//Display the details for the selected slide
 function slideDetails(j) {
 	var info = j.siblings('.slider-info');
+	
 	info.find('.slide-title span').html(j.find('.multi-slide').first().data('title'));
 	info.find('.slide-description span').html(j.find('.multi-slide').first().data('caption'));
+	
 	j.find('.multi-slide').click(function() {
 		info.find('.slide-title span').html((jQuery(this).data('title') ? jQuery(this).data('title') : ""));
 		info.find('.slide-description span').html((jQuery(this).data('caption') ? jQuery(this).data('caption') : ""));
 	});
 }
+
 function slideFeatured(j) {
 	var bg = j.find('.multi-slide').first().css('background-image');
+	
 	if(!bg || bg === 'none') {
 	  bg = 'url(\'' + j.find('.multi-slide').first().find('img').attr('src') + '\')';
 	}
+	
 	j.parent().parent().siblings('.slider-featured').css('background-image', bg);
+	
 	j.find('.multi-slide').click(function() {
 		var bg = jQuery(this).css('background-image');
-		console.log(bg);
 		if(!bg || bg === 'none') {
 		  bg = 'url(\'' + jQuery(this).find('img').attr('src') + '\')';
 		}
@@ -28,11 +34,9 @@ function slideFeatured(j) {
 jQuery(function($) {
 	$(document).ready(function() {
 
-		//-------Multi-Slider Functionality-------
-
 		if($('.multi-slide').length) {
 			$('.multi-slide-wrap').each(function(i, j) {
-				var reviewsWidth = $(j).width();
+				var sliderWidth = $(j).width();
 				var curScroll = 0;
 				var slideCount = $(j).find('.multi-slide').length;
 				var controls = $(j).find('.content-slider-controls');
@@ -53,27 +57,32 @@ jQuery(function($) {
 
 				var visibleSlides = getVisibleSlides();
 
-				function initializeReviews() {
+				function initializeMultiSlider() {
 					var sliderHeight = 0;
 					$(j).find('.multi-slider').height('');
 					$(j).find('.multi-slide').each(function(k, l) {
-						$(l).outerWidth(Math.max((reviewsWidth / visibleSlides), (reviewsWidth / $(j).find('.multi-slide').length)) + 'px');
+						$(l).outerWidth(Math.max((sliderWidth / visibleSlides), (sliderWidth / $(j).find('.multi-slide').length)) + 'px');
 						sliderHeight = Math.max(sliderHeight, $(l).outerHeight());
 					});
 					$(j).height(sliderHeight + 'px');
 				}
+				
+				//Mainly here to fix the slider/slides on after resizing
 				function adjustSlides() {
-					var oldWidth = reviewsWidth;
+					var oldWidth = sliderWidth;
 					var oldVisible = visibleSlides;
-					reviewsWidth = $(j).width();
+					
+					sliderWidth = $(j).width();
 					visibleSlides = getVisibleSlides();
-					initializeReviews();
-					$(j).scrollLeft(curScroll * (reviewsWidth / oldWidth) * (oldVisible / visibleSlides));
+					
+					initializeMultiSlider();
+					
+					$(j).scrollLeft(curScroll * (sliderWidth / oldWidth) * (oldVisible / visibleSlides));
 					curScroll = $(j).scrollLeft();
-					//$('.multi-slider-wrap').scrollLeft(($('.multi-slider-wrap').scrollLeft() + reviewsWidth - oldWidth) * (reviewsWidth / oldWidth));
+					//$('.multi-slider-wrap').scrollLeft(($('.multi-slider-wrap').scrollLeft() + sliderWidth - oldWidth) * (sliderWidth / oldWidth));
 				}
 				
-				initializeReviews();
+				initializeMultiSlider();
 				
 				if($(j).parent().parent().siblings('.slider-featured').length) {
 					slideFeatured($(j));
@@ -97,16 +106,17 @@ jQuery(function($) {
 					var slideWidth = $(j).find('.multi-slide').first().outerWidth();
 					var oldScroll = $(j).scrollLeft();
 					var newScroll = oldScroll - slideWidth;
+					
+					//canRotate used to prevent overlapping clicks causing issues
 					if(!canRotate) {
 						setTimeout(function() {
 							$(j).find('.multi-prev').trigger('click');
 						}, 50);
 					}
 					else {
-						console.log(newScroll);
 						canRotate = false;
 						if(newScroll < -5) {
-							$(j).animate({'scrollLeft' : ((slideWidth * slideCount) - reviewsWidth)}, 350, function() {
+							$(j).animate({'scrollLeft' : ((slideWidth * slideCount) - sliderWidth)}, 350, function() {
 								curScroll = $(j).scrollLeft();
 								canRotate = true;
 							});
@@ -123,6 +133,8 @@ jQuery(function($) {
 					var slideWidth = $(j).find('.multi-slide').first().outerWidth();
 					var oldScroll = $(j).scrollLeft();
 					var newScroll = oldScroll + slideWidth;
+					
+					//canRotate used to prevent overlapping clicks causing issues
 					if(!canRotate) {
 						setTimeout(function() {
 							$(j).find('.multi-next').trigger('click');
@@ -130,7 +142,7 @@ jQuery(function($) {
 					}
 					else {
 						canRotate = false;
-						if(newScroll > ((slideWidth * slideCount) - reviewsWidth + 5)) {
+						if(newScroll > ((slideWidth * slideCount) - sliderWidth + 5)) {
 							$(j).animate({'scrollLeft' : 0}, 350, function() {
 								curScroll = $(j).scrollLeft();
 								canRotate = true;

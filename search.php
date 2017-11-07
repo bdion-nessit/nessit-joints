@@ -1,6 +1,4 @@
 <?php 
-add_action('joints_entry_header', 'get_entry_header', 9);
-
 get_header(); 
 do_action('joints_before_content');
 ?>
@@ -37,7 +35,7 @@ do_action('joints_before_content');
 		    </main> <!-- end #main -->
 		
 		    <?php 
-                do_action('joints_primary_sidebar');
+                do_action('joints_primary_sidebar'); //Main sidebar loads here by default
             ?>
 		
 		</div> <!-- end #inner-content -->

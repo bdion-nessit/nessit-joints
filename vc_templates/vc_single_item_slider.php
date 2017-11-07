@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Column
  */
+
 $el_class = $el_id = $width = $css = $offset = $css_animation = '';
 $output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
@@ -47,6 +48,7 @@ $wrapper_attributes[] = 'data-slider_id="slider-' . preg_replace("/\./", '', uni
 if ( ! empty( $el_id ) ) {
 	$wrapper_attributes[] = 'id="' . esc_attr( $el_id ) . '"';
 }
+
 $output .= '<div ' . implode( ' ', $wrapper_attributes ) . '>';
 $output .= '<div class="wpb_wrapper">';
 $output .= wpb_js_remove_wpautop( $content ) . 
@@ -63,5 +65,5 @@ $output .= '</div>';
 
 echo $output;
 
-remove_action('wp_footer', 'get_slider_scripts'); //Add scripts for single item sliders
-add_action('wp_footer', 'get_slider_scripts'); //Add scripts for single item sliders
+remove_action('wp_footer', 'get_slider_scripts'); //Make sure function is only run on hook once
+add_action('wp_footer', 'get_slider_scripts'); 
