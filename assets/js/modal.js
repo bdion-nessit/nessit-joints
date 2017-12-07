@@ -4,7 +4,7 @@ function toggle_modal() {
 	
 	//If the button has a modal data field, use that to get the modal instead
 	if(jQuery(this).data('modal')) {
-		modal = jQuery('.modal.' + jQuery(this).data('modal'));
+		modal = jQuery('.js-modal.' + jQuery(this).data('modal'));
 	}
 	
 	//If the buttons info yielded an actual modal element
@@ -19,10 +19,10 @@ jQuery(function($) {
 	$('.custom_button').on('click', '', toggle_modal);
 
 	//Close the modal when clicking "Close" or the background behind it
-	$('.modal-content .close-x').click(function() {
+	$('.modal-content .js-close-x').click(function() {
 		$(this).parent().parent().hide();
 	});
-	$('.modal-background').click(function() {
+	$('.js-modal-background').click(function() {
 		$(this).parent().hide();
 	});
 		

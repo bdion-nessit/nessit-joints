@@ -7,32 +7,56 @@ function do_custom_post_query() {
         ),
     ));
     $data = $data['data'];
-	$data['query_data']['post_type'] = (!empty($data['query_data']['post_type']) ? $data['query_data']['post_type'] : 'post');
-	
     $args = array();
     foreach($data['query_data'] as $i => $item) {
-        $args[$i] = $item;
+        $args[$i] = (preg_match("/\,/", $item) ? explode(',', $item) : $item);
     }
-	if(!empty($data['taxonomy']) && !empty($data['terms'])) {
-		$args['tax_query'] = array(
-			'relation' => 'OR',
-			array(
-				'taxonomy' => $data['taxonomy'],
-				'terms' => (preg_match("/\,/", $data['terms']) ? explode(',', $data['terms']) : $data['terms']),
-			),
-		);
+	if(!empty($data['tax'])) {
+		$args['tax_query'] = array();
+		
+		if(count($data['tax']) > 1) {
+			$args['tax_query'] = array(
+				'relation' => 'AND'
+			);
+		}
+		
+		foreach($data['tax'] as $tax) {
+			array_push($args['tax_query'], array(
+				'taxonomy' => $tax['tax'],
+				'terms' => explode(',', $tax['terms']),
+			));
+		}
 	}
+	if(!empty($data['meta'])) {
+		$args['meta_query'] = array();
+		
+		if(count($data['meta']) > 1) {
+			$args['meta_query'] = array(
+				'relation' => 'AND'
+			);
+		}
+		foreach($data['meta'] as $meta) {
+			array_push($args['meta_query'], array(
+				'key' => $meta['key'],
+				'value' => $meta['val'],
+				'compare' => preg_replace("/GREATER THAN/", '>', preg_replace("/LESS THAN/", '<', $meta['compare'])),
+			));
+		}
+	}
+	
     $query1 = new WP_Query($args);
     $output = array();
-	$output['args'] = $args;
     if(!empty($data['callback'])) {
         $output['content'] = $data['callback']($query1);
         $output['type'] = 'string';
+		$output['args'] = $args;
     }
 	else {
 		$output['type'] = 'string';
 		
 		if($query1->have_posts()) {
+			global $is_custom_query;
+			$is_custom_query = true;
 			ob_start();
 			$j = 0;
 			while($query1->have_posts()) {
@@ -42,6 +66,7 @@ function do_custom_post_query() {
 			}
 			$output['j'] = $j;
 			$output['content'] = ob_get_contents();
+			$output['args'] = $args;
 			ob_end_clean();
 		}
 		else {

@@ -28,6 +28,7 @@ $width = vc_column_offset_class_merge( $offset, $width );
 $css_classes = array(
 	$this->getExtraClass( $el_class ) . $this->getCSSAnimation( $css_animation ),
 	'content-slide-wrap',
+	'js-content-slide-wrap',
 	'vc_column-inner',
 	esc_attr( trim( vc_shortcode_custom_css_class( $css ) ) ),
 	$width,

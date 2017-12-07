@@ -14,6 +14,10 @@ single-bookmarks.php
 ?>
 
 <?php 
+
+add_action('joints_entry_content', 'echo_open_vc_row_wrapper', 7);
+add_action('joints_entry_content', 'echo_open_vc_row_wrapper', 11);
+
 get_header(); 
 do_action('joints_before_content');
 ?>
@@ -28,7 +32,7 @@ do_action('joints_before_content');
 
 		<main id="main" class="large-<?php echo $column_width; ?> medium-<?php echo $column_width; ?> columns" role="main">
 		
-		    <?php do_action('joints_entry'); ?>	
+		    <?php do_action('joints_entry'); //Details can be found in core.php ?>	
 
 		</main> <!-- end #main -->
 
